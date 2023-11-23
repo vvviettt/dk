@@ -1,0 +1,95 @@
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center m-t-30 m-b-20">
+            <h4 class="title">
+                <a href="/type">
+                    Phí bảo trì đường bộ
+                </a>
+                <i class="fa fa-angle-right p-r-10 p-l-10"></i>
+                Chỉnh sửa thông tin
+            </h4>
+        </div>
+        <div class="row ">
+            <div class="col-lg-12">
+                <div class="card card-small">
+                    <div class="card-body">
+                        <form action="/type/<%= type.id %>" method="post">
+                            <div class="form-body">
+                                <h4 class="box-title pb-3 text-uppercase font-weight-bold">Thông tin chung cần
+                                    chỉnh
+                                    sửa</h4>
+                                <% if (typeof status !== 'undefined') { %>
+                                <%if (status == 'success') { %>
+                                <div style="color: green;">
+                                    Updated Successfully
+                                </div>
+                                <% } else { %>
+                                <div style="color: red;">
+                                    Some error occurred while editing the type
+                                </div>
+                                <% } %>
+                                <br>
+                                <% } %>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <input type="hidden" name="_method" value="put">
+                                            <label for="name">Loại phương tiện chịu phí</label>
+                                            <input type="text" id="name" name="name"
+                                                class="form-control form-control-label " value="<%= type.name %>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <!-- <select name="_method" value="put"> -->
+                                            <label for="name">Chủng loại phương tiện</label>
+                                            <select class="form-control form-select" name="vehicle_category_id"
+                                                id="vehicle_category_id">
+                                                <!-- <option selected disabled hidden>-Chọn-</option> -->
+                                                <option selected hidden><%= type.category_name %></option>
+                                                <% category.map((item, index) => { %>
+                                                <option value="<%= item.id %>"><%= item.name %></option>
+                                                <% }) %>
+                                            </select>
+                                            <!-- <input type="text" id="name" name="name"
+                                                        class="form-control form-control-label"
+                                                        value="<%= type.name %>"> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="road_fee">Mức phí/tháng</label>
+                                            <div class="input-group">
+                                                <input data-type="currency" type="text" id="road_fee" name="road_fee"
+                                                    class="form-control form-control-label"
+                                                    aria-label="Amount (to the nearest dollar)"
+                                                    value="<%= new Intl.NumberFormat(['ban', 'id']).format(type.road_fee) %>">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">đ</span>
+                                                </div>
+                                            </div>
+                                            <!-- <input type="text" id="road_fee" name="road_fee"
+                                                        class="form-control form-control-label"
+                                                        value="<%= type.road_fee %>"> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="action">
+                                    <a href="/type" type="button" class="btn btn-inverse">
+                                        Hủy
+                                    </a>
+                                    <button type="submit" class="btn btn-success">Lưu</button>
+                                </div>
+                                <!-- <a href="/type">
+                                            <button type="reset" class="btn btn-inverse">Hủy</button>
+                                        </a> -->
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>

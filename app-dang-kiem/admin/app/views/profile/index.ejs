@@ -1,0 +1,98 @@
+<div class="page-wrapper">
+  <div class="container-fluid">
+    <div class="row page-titles">
+      <div class="col-md-5 align-self-center">
+        <h4 class="text-themecolor">
+          Danh mục thông tin hồ sơ
+        </h4>
+      </div>
+    </div>
+
+    <form action="/profile" method="post">
+      <div class="row">
+        <div class="col-12">
+          <div class="card ">
+            <div class="card-body pr-4 pl-4">
+              <h6 class="box-title font-weight-bold">Hotline</h6>
+              <% hot_line.map((item, index) => { %>
+              <input type="text" name="hot_line" class="form-control form-control-label"
+                value="<%= item.phone_number %>">
+              <% }) %>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="form-body">
+                <div>
+                  <table class="table table-bordered" id="new_row_profile">
+                    <thead>
+                      <tr>
+                        <th>Thông tin hồ sơ</th>
+                        <th class="text-center column-width">Hiển thị</th>
+                        <th class="text-center column-width">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% profile.map((item, index) => { %>
+                      <tr>
+                        <td>
+                          <input type="text" name="name" class="form-control form-control-label"
+                            aria-label="Amount (to the nearest dollar)" value="<%= item.name %>">
+                        </td>
+                        <td class="text-center">
+                          <div class="form-check ">
+                            <input type="checkbox" class="form-check-input mt-0" name="status" id="status"
+                              <%= item.status == '1' ? "checked":"" %>>
+                            <label class="form-check-label" for="status"></label>
+                          </div>
+                        </td>
+                        <td class="text-center"><a href="/profile/delete/<%= item.id %>"><img
+                              src="/assets/images/Delete.svg" title="Xóa" /></a>
+                        </td>
+                      </tr>
+                      <% }) %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="align-self-center text-right">
+                <div class="d-flex justify-content-start align-items-center">
+                  <a type="button" class="btn btn-outline-primary d-none d-lg-block m-l-15"
+                    onclick="addNewRowProfile();">
+                    <i class="fa fa-plus-circle"></i> Thêm dòng
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-actions d-flex justify-content-end">
+            <button type="submit" class="btn btn-success"> Lưu</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+<script>
+  var profile_row = 0;
+
+  function addNewRowProfile() {
+    html = '<tr id="profile-row' + profile_row + '">';
+    html += '<td><input type="text" name="name" class="form-control form-control-label" placeholder="Nhập"></td>'
+    html +=
+      '<td class="text-center"> <div class="form-check "><input type="checkbox" class="form-check-input mt-0" name="status" id="status"> <label class="form-check-label" for="status"></label> </div> </td>'
+    html +=
+      '<td class="mt-10 text-center"><button type="button" class="btn p-0" onclick="$(\'#profile-row' +
+      profile_row +
+      '\').remove();"><img src="/assets/images/Delete.svg" title="Xóa" /></button></td>';
+
+    html += '</tr>';
+
+    $('#new_row_profile tbody').append(html);
+
+    profile_row++;
+  }
+</script>

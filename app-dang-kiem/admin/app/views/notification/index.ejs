@@ -1,0 +1,67 @@
+<div class="page-wrapper">
+  <div class="container-fluid">
+    <div class="row page-titles">
+      <div class="col-md-5 align-self-center">
+        <h4 class="text-themecolor">
+          Cấu hình thông báo
+        </h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <form action="/notification" method="post" class='card-small'>
+          <div class="card">
+            <div class="card-body">
+              <div class="form-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <input type="hidden" name="_method" value="put">
+                      <label for="name">Sử dụng gửi thông báo</label>
+                      <!-- Default checked -->
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="status" name="status"
+                          <%= notification.status? "checked":"" %>>
+                        <label class="custom-control-label" for="status"></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="day_before_expired">Số ngày cảnh báo sắp đến hạn</label>
+                      <input type="text" id="day_before_expired" name="day_before_expired"
+                        class="form-control form-control-label" value="<%= notification.day_before_expired %>">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="day_before_registry">Số ngày thông báo có lịch đăng kiểm</label>
+                      <input type="text" id="day_before_registry" name="day_before_registry"
+                        class="form-control form-control-label" value="<%= notification.day_before_registry %>">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="time">Thời gian gửi thông báo (giờ)</label>
+
+                      <input type="time" class="form-control" id=" time" name="time" value="<%= notification.time %>">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-actions d-flex justify-content-end">
+            <button type="submit" class="btn btn-success"> Lưu</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>

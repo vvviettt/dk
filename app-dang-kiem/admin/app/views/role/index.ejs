@@ -1,0 +1,55 @@
+<div class="page-wrapper">
+  <div class="container-fluid">
+    <div class="row page-titles">
+      <div class="col-md-5 align-self-center">
+        <h4 class="text-themecolor">
+          Phân quyền nhân viên
+        </h4>
+      </div>
+    </div>
+    <div class="row">
+
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div>
+              <div class="table-responsive">
+                <table id="config-table" class="table display table-bordered table-striped wrap">
+                  <thead>
+                    <tr>
+                      <th>STT</th>
+                      <th>Tên nhân viên</th>
+                      <th>Số điện thoại</th>
+                      <th>Tên đăng nhập</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% role.map((item, index) => { %>
+
+                    <tr>
+                      <td><%= index + 1 %></td>
+                      <td><%= item.name %></td>
+                      <td><%= item.phone %></td>
+                      <td><%= item.username %></td>
+                      <td style="width: 150px;">
+                        <div class="d-flex justify-content-end">
+                          <a class="p-r-10 p-l-10" href="/role/staff/<%= item.id %>">
+                            <button type="button" class="btn btn-obtain m-r-10">
+                              Phân quyền
+                            </button>
+                          </a>
+                      </td>
+                    </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>

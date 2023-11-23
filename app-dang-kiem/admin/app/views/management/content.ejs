@@ -1,0 +1,519 @@
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center m-t-30 m-b-20">
+            <h4 class="title">
+                <a href="/management">
+                    Quản lý đăng kiểm
+                </a>
+                <i class="fa fa-angle-right p-r-10 p-l-10"></i>
+                <a href="/management">
+                    Đã đăng ký
+                </a>
+                <i class="fa fa-angle-right p-r-10 p-l-10"></i>
+                Chi tiết
+            </h4>
+        </div>
+        <div class="row ">
+            <div class="col-lg-12">
+                <div class="card card-small">
+                    <div class="card-body">
+
+                        <h4 class="box-title p-b-20 font-weight-bold text-uppercase">Thông tin chung</h4>
+
+                        <div class="row pt-3">
+                            <div class="col-md-4">
+                                <h6>Loại phượng
+                                    tiện</h6>
+                                <p class="font-weight-bold"><%= management.types_name %></p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>Biển kiểm
+                                    soát</h6>
+                                <p class="font-weight-bold text-uppercase"><%= management.license_plate %></p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>Chủ phương
+                                    tiện</h6>
+                                <p class="font-weight-bold"><%= management.owner_name %></p>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row pt-3">
+                            <div class="col-md-4">
+                                <h6>Số điện thoại</h6>
+                                <p class="font-weight-bold"><%= management.owner_phone %></p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>Ngày đăng kiểm</h6>
+                                <p class="font-weight-bold">
+                                    <%=("0" + management.date.getDate()).slice(-2)%>/<%= ("0" + (management.date.getMonth() + 1)).slice(-2) %>/<%= management.date.getFullYear()%>
+                                </p>
+                            </div>
+                            <%if (management.address === null | management.address == '') { %>
+                            <% } else { %>
+                            <div class="col-md-4">
+                                <h6>Đăng kiểm hộ</h6>
+                                <img src="/assets/images/Group.svg" />
+                            </div>
+                            <% } %>
+                        </div>
+                        <%if (management.address === null | management.address == '') { %>
+                        <% } else { %>
+                        <hr />
+                        <div class="row pt-3">
+                            <div class="col-md-4">
+                                <div class="card card-small">
+                                    <h6>Địa chỉ nhận xe</h6>
+                                    <p class="font-weight-bold"><%= management.address %></p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card card-small">
+                                    <h6>Nhân viên nhận xe</h6>
+                                    <p class="font-weight-bold"><%= management.staff_name %></p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card card-small">
+                                    <h6>Thời gian nhận xe</h6>
+                                    <p class="font-weight-bold"><%= management.car_delivery_time %></p>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 pt-3">
+                <div class="card-small d-flex justify-content-between">
+                    <div>
+                        <a href="/management" type="button" class="btn btn-inverse">Đóng</a>
+                    </div>
+                    <div class="d-flex ">
+                        <form action="/management/assignment/<%= management.id %>" method="post">
+                            <input type="hidden" name="_method" value="patch">
+                            <% if (management.address === null | management.address == '') { %>
+                            <% } else { %>
+                            <button type="button" class="btn btn-dark mr-2" data-toggle="modal" id="btn-get-data-modal"
+                                data-target="#ModalMoney<%= management.id %>" data-id="<%= management.id %>">
+                                Phân công
+                            </button>
+                            <% } %>
+                            <% if (functions.update1 === 1 ) { %>
+                            <div class="modal fade" id="ModalMoney<%= management.id %>" tabindex="-1" role="dialog"
+                                aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-lg modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="ModalLongTitle">PHÂN CÔNG</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <table id="myTableStaff"
+                                                class="table table-hover contact-list footable footable-5 footable-paging footable-paging-center breakpoint-lg">
+                                                <thead>
+                                                </thead>
+                                                <tbody>
+                                                    <input type="hidden" name="staff_id"
+                                                        value="<%= management.staff_id %>" id="staff_id">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Hủy</button>
+                                            <button type="submit" class="btn btn-dark">Phân công</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } else { %>
+                            <div class="modal fade" id="ModalMoney<%= management.id %>" tabindex="-1" role="dialog"
+                                aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="ModalLongTitle">Thông báo</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h4 class="text-danger text-center">
+                                                Không được phép truy cập !!!
+                                            </h4>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Đóng</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+                        </form>
+                        <form action="/management/payed/<%= management.id %>" method="post">
+                            <input type="hidden" name="_method" value="patch">
+                            <input type="text" id="pay_at" name="pay_at" class="form-control form-control-label d-none"
+                                value="1">
+                            <button type="button" class="btn waves-effect waves-light btn-info " data-toggle="modal"
+                                data-target="#doupleModal<%= management.id %>" data-id="<%= management.id %>">
+                                Đã thu tiền
+                            </button>
+                            <% if (functions.update1 === 1) { %>
+                            <div class="modal fade" id="doupleModal<%= management.id %>" tabindex="-1" role="dialog"
+                                aria-labelledby="doupleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="doupleModalLongTitle">Xác nhận</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Xác nhận THANH TOÁN phí và lệ phí đăng kiểm cho xe
+                                            <mark class="text-uppercase">
+                                                <%= management.license_plate %>
+                                            </mark>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Hủy</button>
+                                            <button type="button" class="btn btn-success " data-dismiss="modal"
+                                                data-toggle="modal" data-target="#Modal<%= management.id %>">Xác
+                                                nhận</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal bs-example-modal-sm fade" id="Modal<%= management.id %>" tabindex="-1"
+                                role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="ModalLongTitle">THU PHÍ</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <input type="hidden" name="_method" value="patch">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="fee_5" class="control-label">Phí đăng kiểm</label>
+                                                        <div class="input-group">
+                                                            <input data-type="currency" type="text" id="fee_5 "
+                                                                name="fee_5" value="500.000"
+                                                                class="form-control form-control-label"
+                                                                aria-label="Amount (to the nearest dollar)"
+                                                                placeholder="0" required>
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text">đ</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="fee_6" class="control-label">Lệ phí đăng
+                                                            kiểm</label>
+                                                        <div class="input-group">
+                                                            <input data-type="currency" type="text" id="fee_6"
+                                                                name="fee_6" value="200.000"
+                                                                class="form-control form-control-label"
+                                                                aria-label="Amount (to the nearest dollar)"
+                                                                placeholder="0" required>
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text">đ</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="fee_7" class="control-label">Phí khác</label>
+                                                        <div class="input-group">
+                                                            <input data-type="currency" type="text" id="fee_7"
+                                                                name="fee_7" value="100.000"
+                                                                class="form-control form-control-label"
+                                                                aria-label="Amount (to the nearest dollar)"
+                                                                placeholder="0" required>
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text">đ</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Hủy</button>
+                                            <button type="button" data-id="<%= management.id %>"
+                                                class="btn btn-success ml-2 get-value-input" data-toggle="modal"
+                                                data-target="#Modal_Second<%= management.id %>">Lưu</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal bs-example-modal-sm backdrop fade" id="Modal_Second<%= management.id %>"
+                                tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="ModalLongTitle">Phiếu thu tiền</h5>
+                                            <button type="button" class="close" aria-label="Close"
+                                                onclick="this.form.submit()">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body" id='printarea'>
+                                            <h6 class=" row ">
+                                                <div class=" col-md-6 ">Biển kiểm soát</div>
+                                                <div class=" col-md-6 ml-auto text-right">
+                                                    <%= management.license_plate %>
+                                                </div>
+                                            </h6>
+                                            <hr>
+                                            <h6 class="row ">
+                                                <div class="col-md-6 ">Ngày đăng kiểm</div>
+                                                <div class="col-md-6 ml-auto text-right">
+                                                    <%=("0" + management.date.getDate()).slice(-2)%>/<%= ("0" + (management.date.getMonth() + 1)).slice(-2) %>/<%= management.date.getFullYear()%>
+                                                </div>
+                                            </h6>
+                                            <hr>
+                                            <h6 class="row ">
+                                                <div class="col-md-6 ">Tên chủ xe</div>
+                                                <div class="col-md-6 ml-auto text-right">
+                                                    <%= management.owner_name %></div>
+                                            </h6>
+                                            <hr>
+                                            <span id="modal_body%>"></span>
+                                        </div>
+                                        <div class="modal-footer justify-content-center">
+                                            <button type="submit" id="print" data-id="<%= management.id %>"
+                                                class="btn btn-success ml-2" onclick="printDocument('printarea')">In
+                                                phiếu thu tiền</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } else { %>
+                            <div class="modal fade" id="doupleModal<%= management.id %>" tabindex="-1" role="dialog"
+                                aria-labelledby="doupleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="doupleModalLongTitle">Thông báo</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h4 class="text-danger text-center">
+                                                Không được phép truy cập !!!
+                                            </h4>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Đóng</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+                        </form>
+                        <a href="/management/edit/<%= management.id %>"><button
+                                class="btn waves-effect waves-light btn-success ml-2">Chỉnh sửa</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".get-value-input").click(function () {
+            var dataFee_5 = $("input[name=fee_5]").val();
+            var dataFee_6 = $("input[name=fee_6]").val();
+            var dataFee_7 = $("input[name=fee_7]").val();
+            var htmlContent = `
+          <h6 class="row ">
+            <div class="col-md-6 ">Phí đăng kiểm</div>
+            <div class="col-md-6 ml-auto text-right">
+            ${dataFee_5} đ</div>
+          </h6>
+            <hr>
+          <h6 class="row ">
+            <div class="col-md-6 ">Lệ phí đăng kiểm</div>
+            <div class="col-md-6 ml-auto text-right">
+            ${dataFee_6} đ</div>
+          </h6>
+            <hr>
+          <h6 class="row ">
+            <div class="col-md-6 ">Phí khác</div>
+            <div class="col-md-6 ml-auto text-right">
+            ${dataFee_7} đ</div>
+          </h6>`;
+            $(`#modal_body`).html(htmlContent);
+        });
+    });
+</script>
+<script>
+    function printDocument(elemId) {
+
+        var printHeader = `<h3 class="text-center mb-4"> Phiếu thu tiền </h3>`;
+        var printContents = document.getElementById(elemId).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printHeader + printContents;
+
+        window.print();
+        window.close();
+
+        document.body.innerHTML = originalContents;
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        $('#btn-get-data-modal').click(function () {
+            var dataEmployee = $(`#staff_id`).val();
+            $.ajax({
+                url: 'https://vitraco-api-hrm-dev.greenglobal.com.vn/api/v1/employees?limit=2&code=nganvb,thuan.nt,thao.db,hy',
+                type: 'GET',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization',
+                        `Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkMzQzZFRjA2ODVBQkFEN0UzN0IzOTU4OUVGNUZDNzk0IiwidHlwIjoiYXQrand0In0.eyJuYmYiOjE2NjUwMjE2NDEsImV4cCI6MTY5NjU1NzY0MSwiaXNzIjoiaHR0cHM6Ly9lcnAtY2xvdmVyLXNzby5kZW1vLmdyZWVuZ2xvYmFsLmNvbS52biIsImF1ZCI6IkVycCIsImNsaWVudF9pZCI6IkVycF9BcHAiLCJzdWIiOiIzOWZjNzg1Yi0zOTZmLTE4ZDItMjRlZS01NDdmMzA3OTlhODEiLCJhdXRoX3RpbWUiOjE2NjUwMjE2NDEsImlkcCI6ImxvY2FsIiwicm9sZSI6ImFkbWluIiwicGhvbmVfbnVtYmVyX3ZlcmlmaWVkIjoiRmFsc2UiLCJlbWFpbCI6ImFkbWluQGFicC5pbyIsImVtYWlsX3ZlcmlmaWVkIjoiRmFsc2UiLCJuYW1lIjoiYWRtaW4iLCJpYXQiOjE2NjUwMjE2NDEsInNjb3BlIjpbIkVycCJdLCJhbXIiOlsicHdkIl19.l8rDfPoMX0N2oo6PbnMGZULUnBhyHvYCUw9gS1TNJxFoTMZI7HF-KKThD5YL1hWvhEXcJtTiEqJ6_LSK7cu9L5g0ZmugP5QV0Qq5ian6XfZ8ahAJ9BpZ2xcOhZGR3NnDf78KaBVybWsmUWeHTUSgUvmJ53oFNFWz7-45Aq6R0Xx1oExaIaM-RlUx8pfVB-6WdktPkvb4g_Sm3IEXCnE5pBBqDaZ1jXQMsl16a6Ve5XD1MiDC4HzdibA15L-D21nG808s4nkwtUWMgp5qlgL3p5qZfMWsbabaIf2UrcY-mH9yP4fASQcEpveT5P9SVxr6MMA0Ssl-UYvJmYs_B8w0Eg`
+                    );
+                },
+                dataType: 'json',
+                data: 'result',
+                success: function (result) {
+                    // console.log("result: ", result.data);
+                    $('#myTableStaff tr').empty();
+                    var header = $('#myTableStaff thead');
+                    var body = $('#myTableStaff tbody');
+
+                    htmlTime =
+                        `<label for="startTime"></label> <input type="time" id="time" name="time" value="13:00">`;
+                    var hTr;
+                    // Headers
+                    $('#myTableStaff thead')
+                        .append($('<tr>')
+                            .append(
+                                $('<th>', {
+                                    text: `Mã nhân viên`,
+                                })
+                            )
+                            .append(
+                                $('<th>', {
+                                    text: `Nhân viên`,
+                                })
+                            )
+                            .append(
+                                $('<th>', {
+                                    text: `Số điện thoại`,
+                                })
+                            )
+                            .append(
+                                $('<th>', {
+                                    text: `Chỗ ở hiện tại`,
+                                })
+                            )
+                            .append(
+                                $('<th>', {
+                                    text: `Email`,
+                                })
+                            )
+                            .append(
+                                $('<th>', {
+                                    text: `Số CMND`,
+                                })
+                            )
+                            .append(
+                                $('<th>', {
+                                    text: `Phân công `,
+                                })
+                            )
+                            .append(
+                                $('<th>', {
+                                    text: `Thời gian nhận xe`,
+                                })
+                            )
+                        )
+
+                    // Body
+                    for (var d in result.data) {
+                        var data = result.data[d].attributes;
+                        $('#myTableStaff tbody').append(
+                            $('<tr>')
+                            .append(
+                                $('<td>', {
+                                    html: `<input id="code" name="code" class="d-none" value=${data.code} />  ${data.code}`
+                                })
+                            )
+                            .append(
+                                $('<td>', {
+                                    html: `<label for="owner_phone" class="control-label"> </label> <input type="text" id="fullName" name="fullName" class="d-none" value="${data.fullName}" />  ${data.fullName}`
+                                })
+                            )
+                            .append(
+                                $('<td>', {
+                                    html: `<label for="phoneNumber" class="control-label"> </label> <input type="text" id="phoneNumber" name="phoneNumber" class="d-none" value="${data.phoneNumber}" />  ${data.phoneNumber}`
+
+                                })
+                            )
+                            .append(
+                                $('<td>', {
+                                    html: `<label for="dateOfBirth" class="control-label"> </label> <input type="text" id="dateOfBirth" name="dateOfBirth" class="d-none" value="${data.dateOfBirth}" />  ${data.permanentAddress ? data.permanentAddress: '' }`
+
+                                })
+                            )
+                            .append(
+                                $('<td>', {
+                                    text: data.email,
+                                })
+                            )
+                            .append(
+                                $('<td>', {
+                                    html: `<label for="idCard" class="control-label"> </label> <input type="text" id="idCard" name="idCard" class="d-none" value="${data.idCard}" />  ${data.idCard}`
+
+                                })
+                            )
+                            .append(
+                                $('<td>', {
+                                    html: `<div class="form-check"> <input  type="checkbox" class="form-check-input mt-0  radio" value="1" name="fooby[]" ${data.code == dataEmployee ? "checked" : null } > <label class="form-check-label" ></label> </div>`,
+                                })
+                            )
+                            .append(
+                                $('<td>', {
+                                    html: htmlTime,
+                                })
+                            )
+                        );
+                    }
+
+                    $("input:checkbox").on('click', function () {
+                        var $box = $(this);
+                        if ($box.is(":checked")) {
+                            var group = "input:checkbox[name='" + $box.attr(
+                                "name") + "']";
+                            $(group).prop("checked", false);
+
+                            $box.prop("checked", true);
+                        } else {
+                            $box.prop("checked", false);
+                        }
+                    });
+
+                },
+            });
+
+        });;
+    });
+</script>

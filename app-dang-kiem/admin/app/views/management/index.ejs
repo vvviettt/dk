@@ -1,0 +1,583 @@
+<div class="page-wrapper">
+  <div class="container-fluid">
+    <div class="row page-titles">
+      <div class="col-md-5 align-self-center">
+        <h4 class="text-themecolor">
+          Quản lý đăng kiểm
+        </h4>
+      </div>
+      <div class="col-md-7 align-self-center text-right">
+        <div class="d-flex justify-content-end align-items-center">
+          <a href="/management/create" type="button" class="btn btn-success d-none d-lg-block m-l-15">
+            <i class="fa fa-plus-circle"></i> Thêm mới
+          </a>
+        </div>
+      </div>
+    </div>
+    <input class='d-none' type="text" id="local-username" value="<%= user.username %>">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div>
+              <div class="d-flex justify-content-between align-item-center sidebar-nav p-0 side-manager">
+
+                <ul id="sidebarnav" class="d-flex">
+                  <li>
+                    <a class="waves-effect waves-dark" href="/management" aria-expanded="false">
+                      <span class="hide-menu">Đã đăng ký (<%= management.items.length %>) </span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="waves-effect waves-dark" href="/pay" aria-expanded="false">
+                      <span class="hide-menu">Đã thanh toán </span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="waves-effect waves-dark" href="/checked" aria-expanded="false">
+                      <span class="hide-menu">Đã đăng kiểm </span>
+                    </a>
+                  </li>
+                </ul>
+                <div class="row">
+                  <div class="col-md-10 ">
+                    <form action="/management" method="get" class="myForm">
+                      <div class="p-t-15">
+                        <div class="input-group" style="width: 240px">
+                          <input id="daterange" name="daterange" type="text" autocomplete="off"
+                            placeholder="dd/mm/yyyy - dd/mm/yyyy" class="form-control"
+                            <% if (typeof daterange != "undefined" && daterange) { %> value="<%= daterange %>"
+                            <% } %> />
+                          <label class="input-group-btn input-icon" for="daterange">
+                            <span class="btn btn-default  m-l-25">
+                              <span class="glyphicon glyphicon-calendar">
+                                <img src="/assets/images/calendar.svg" /></i>
+                              </span>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="col-md-2 p-t-15 ">
+                    <div class="d-flex align-items-center h-100">
+                      <a href="/management">
+                        <lord-icon src="https://cdn.lordicon.com/akuwjdzh.json" trigger="hover"
+                          style="width:25px;height:30px">
+                        </lord-icon>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="table-responsive">
+                <table id="config-table" class="table display table-bordered table-striped wrap">
+                  <thead>
+                    <tr>
+                      <th>STT</th>
+                      <th>Ngày đăng ký</th>
+                      <th class="column-width">Biển kiểm soát</th>
+                      <th>Chủ phương tiện</th>
+                      <th>Số điện thoại</th>
+                      <th>Ngày đăng kiểm</th>
+                      <th>Đăng kiểm hộ</th>
+                      <th class="w-25">Địa chỉ nhận xe </th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% management.items.map((item, index) => { %>
+                    <tr>
+                      <td><%= index + 1 %></td>
+                      <td>
+                        <%= item.create_at.getDate() %>/<%= item.create_at.getMonth() + 1  %>/<%= item.create_at.getFullYear() %>
+                      </td>
+                      <td class="text-uppercase"><a href="/management/content/<%= item.id %>">
+                          <%= management.licensePlateConvert(item.license_plate) %> </a></td>
+                      <td> <%= item.owner_name %> </td>
+                      <td><%= item.owner_phone %></td>
+                      <td><%= management.dateConvert(new Date(item.date)) %></td>
+                      <td> <%if (item.address === null | item.address == '') { %>
+                        <% } else { %>
+                        <img src="/assets/images/checked.svg" />
+                        <% } %> </td>
+                      <td><%= item.address %></td>
+                      <td>
+                        <div class="d-flex justify-content-end">
+                          <form action="/management/assignment/<%= item.id %>" method="post">
+                            <input type="hidden" name="_method" value="patch">
+
+                            <% if (item.address === null | item.address == '') { %>
+                            <% } else { %>
+                            <button type="button" class="btn p-0 btn-get-data-modal" data-toggle="modal"
+                              data-target="#ModalMoney<%= item.id %>" data-id="<%= item.id %>">
+                              <img class="p-r-10" src="/assets/images/assignment.svg" title="Phân công" />
+                            </button>
+                            <% } %>
+                            <% if (functions.update1 === 1 ) { %>
+                            <div class="modal fade" id="ModalMoney<%= item.id %>" tabindex="-1" role="dialog"
+                              aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-lg modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="ModalLongTitle">PHÂN CÔNG</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <table id="myTableStaff_<%= item.id %>"
+                                      class="table table-hover contact-list footable footable-5 footable-paging footable-paging-center breakpoint-lg">
+                                      <thead>
+                                      </thead>
+                                      <tbody>
+                                        <input type="hidden" name="owner_phone" value="<%= item.owner_phone %>">
+                                        <input type="hidden" name="id" value="<%= item.id %>">
+                                        <input type="hidden" name="staff_id" value="<%= item.staff_id %>"
+                                          id="staff_id<%= item.id %>">
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                    <button type="submit" class="btn btn-dark">Phân công</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <% } else { %>
+                            <div class="modal fade" id="ModalMoney<%= item.id %>" tabindex="-1" role="dialog"
+                              aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="ModalLongTitle">Thông báo</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <h4 class="text-danger text-center">
+                                      Không được phép truy cập !!!
+                                    </h4>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <% } %>
+                          </form>
+                          <form action="/management/payed/<%= item.id %>" method="post">
+                            <input type="hidden" name="_method" value="patch">
+                            <!-- <input type="hidden" name="id" value="<%= item.id %>"> -->
+
+                            <input type="text" id="pay_at" name="pay_at" class="form-control form-control-label d-none"
+                              value="1">
+
+                            <button type="button" class="btn p-0" data-toggle="modal"
+                              data-target="#doupleModal<%= item.id %>" data-id="<%= item.id %>">
+                              <img src="/assets/images/Money.svg" title="Đã thu tiền" />
+                            </button>
+                            <% if (functions.update1 === 1) { %>
+                            <div class="modal fade" id="doupleModal<%= item.id %>" tabindex="-1" role="dialog"
+                              aria-labelledby="doupleModalCenterTitle" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="doupleModalLongTitle">Xác nhận</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    Xác nhận THANH TOÁN phí và lệ phí đăng kiểm cho xe
+                                    <mark class="text-uppercase">
+                                      <%= item.license_plate %>
+                                    </mark>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                    <button type="button" class="btn btn-success " data-dismiss="modal"
+                                      data-toggle="modal" data-target="#Modal<%= item.id %>">Xác nhận</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="modal bs-example-modal-sm fade" id="Modal<%= item.id %>" tabindex="-1"
+                              role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="ModalLongTitle">THU PHÍ</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <div class="row">
+                                      <input type="hidden" name="_method" value="patch">
+                                      <div class="col-md-12">
+                                        <div class="form-group">
+                                          <label for="fee_5" class="control-label">Phí đăng kiểm</label>
+                                          <div class="input-group">
+                                            <input data-type="currency" type="text" id="fee_5_<%= item.id %>"
+                                              name="fee_5" value="500.000" class="form-control form-control-label"
+                                              aria-label="Amount (to the nearest dollar)" placeholder="0" required>
+                                            <div class="input-group-append">
+                                              <span class="input-group-text">đ</span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-12">
+                                        <div class="form-group">
+                                          <label for="fee_6" class="control-label">Lệ phí đăng kiểm</label>
+                                          <div class="input-group">
+                                            <input data-type="currency" type="text" id="fee_6_<%= item.id%>"
+                                              name="fee_6" value="200.000" class="form-control form-control-label"
+                                              aria-label="Amount (to the nearest dollar)" placeholder="0" required>
+                                            <div class="input-group-append">
+                                              <span class="input-group-text">đ</span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-12">
+                                        <div class="form-group">
+                                          <label for="fee_7" class="control-label">Phí khác</label>
+                                          <div class="input-group">
+                                            <input data-type="currency" type="text" id="fee_7_<%= item.id%>"
+                                              name="fee_7" value="100.000" class="form-control form-control-label"
+                                              aria-label="Amount (to the nearest dollar)" placeholder="0" required>
+                                            <div class="input-group-append">
+                                              <span class="input-group-text">đ</span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                    <button type="button" data-id="<%= item.id %>"
+                                      class="btn btn-success ml-2 get-value-input" id="get_value_input"
+                                      data-toggle="modal" data-target="#Modal_Second<%= item.id %>">Lưu</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="modal bs-example-modal-sm backdrop fade" id="Modal_Second<%= item.id %>"
+                              tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="ModalLongTitle">Phiếu thu tiền</h5>
+                                    <button type="button" class="close" aria-label="Close" onclick="this.form.submit()">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body" id='printarea<%= item.id %>'>
+                                    <h6 class=" row ">
+                                      <div class=" col-md-6 ">Biển kiểm soát</div>
+                                      <div class=" col-md-6 ml-auto text-right">
+                                        <%= management.licensePlateConvert(item.license_plate) %>
+                                      </div>
+                                    </h6>
+                                    <hr>
+                                    <h6 class="row ">
+                                      <div class="col-md-6 ">Ngày đăng kiểm</div>
+                                      <div class="col-md-6 ml-auto text-right">
+                                        <%= management.dateConvert(new Date(item.date)) %></div>
+                                    </h6>
+                                    <hr>
+                                    <h6 class="row ">
+                                      <div class="col-md-6 ">Tên chủ xe</div>
+                                      <div class="col-md-6 ml-auto text-right">
+                                        <%= item.owner_name %></div>
+                                    </h6>
+                                    <hr>
+                                    <span id="modal_body_<%= item.id %>"></span>
+                                  </div>
+                                  <div class="modal-footer justify-content-center">
+                                    <button type="submit" id="print" data-id="<%= item.id %>"
+                                      class="btn btn-success ml-2" onclick="printDocument('printarea<%= item.id %>')">In
+                                      phiếu thu tiền</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <% } else { %>
+                            <div class="modal fade" id="doupleModal<%= item.id %>" tabindex="-1" role="dialog"
+                              aria-labelledby="doupleModalCenterTitle" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="doupleModalLongTitle">Thông báo</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <h4 class="text-danger text-center">
+                                      Không được phép truy cập !!!
+                                    </h4>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <% } %>
+                          </form>
+
+                          <a class="p-r-10 p-l-10" href="/management/edit/<%= item.id %>">
+                            <img src="/assets/images/Edit.svg" title="Chỉnh sửa" />
+                          </a>
+                          <div>
+                            <button type="button" class="btn p-0" data-toggle="modal"
+                              data-target="#exampleModal<%= item.id %>" data-id="<%= item.id %>">
+                              <img src="/assets/images/Delete.svg" title="Xóa" />
+                            </button>
+                            <div class="modal fade" id="exampleModal<%= item.id %>" tabindex="-1" role="dialog"
+                              aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">LƯU Ý</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    XÁC NHẬN XÓA LỊCH ĐĂNG KÝ ĐĂNG KIỂM của xe
+                                    <mark>
+                                      <%= item.license_plate %>
+                                    </mark>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                    <a href="/management/delete/<%= item.id %>"> Xác nhận</a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+<script src="https://cdn.lordicon.com/qjzruarw.js"></script>
+<script>
+  $(document).ready(function () {
+    $(".get-value-input").click(function () {
+      let item_id = $(this).attr("data-id")
+
+      var htmlContent = `
+        <h6 class="row ">
+          <div class="col-md-6 ">Phí đăng kiểm</div>
+          <div class="col-md-6 ml-auto text-right">
+          ${document.getElementById(`fee_5_${item_id}`).value} đ</div>
+        </h6>
+          <hr>
+        <h6 class="row ">
+          <div class="col-md-6 ">Lệ phí đăng kiểm</div>
+          <div class="col-md-6 ml-auto text-right">
+          ${document.getElementById(`fee_6_${item_id}`).value} đ</div>
+        </h6>
+          <hr>
+        <h6 class="row ">
+          <div class="col-md-6 ">Phí khác</div>
+          <div class="col-md-6 ml-auto text-right">
+          ${document.getElementById(`fee_7_${item_id}`).value} đ</div>
+        </h6>`;
+      $(`#modal_body_${item_id}`).html(htmlContent);
+    });
+  });
+</script>
+<script>
+  function printDocument(elemId) {
+
+    var printHeader = `<h3 class="text-center mb-4"> Phiếu thu tiền </h3>`;
+    var printContents = document.getElementById(elemId).innerHTML;
+    var originalContents = document.body.innerHTML;
+
+    document.body.innerHTML = printHeader + printContents;
+
+    window.print();
+    window.close();
+
+    document.body.innerHTML = originalContents;
+  }
+</script>
+<script>
+  var inputString = $("#local-username").val();
+  localStorage.setItem('username', inputString);
+</script>
+<script>
+  $(function () {
+    var d = new Date(),
+      h = d.getHours(),
+      m = d.getMinutes();
+    if (h < 10) h = '0' + h;
+    if (m < 10) m = '0' + m;
+    $('input[type="time"][value="now"]').each(function () {
+      $(this).attr({
+        'value': h + ':' + m
+      });
+    });
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    $('.btn-get-data-modal').click(function () {
+      let item_id = $(this).attr("data-id")
+      var dataEmployee = $(`#staff_id${item_id}`).val();
+      $.ajax({
+        url: 'https://vitraco-api-hrm-dev.greenglobal.com.vn/api/v1/employees?limit=2&code=nganvb,thuan.nt,thao.db,hy',
+        type: 'GET',
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('Authorization',
+            `Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkMzQzZFRjA2ODVBQkFEN0UzN0IzOTU4OUVGNUZDNzk0IiwidHlwIjoiYXQrand0In0.eyJuYmYiOjE2NjUwMjE2NDEsImV4cCI6MTY5NjU1NzY0MSwiaXNzIjoiaHR0cHM6Ly9lcnAtY2xvdmVyLXNzby5kZW1vLmdyZWVuZ2xvYmFsLmNvbS52biIsImF1ZCI6IkVycCIsImNsaWVudF9pZCI6IkVycF9BcHAiLCJzdWIiOiIzOWZjNzg1Yi0zOTZmLTE4ZDItMjRlZS01NDdmMzA3OTlhODEiLCJhdXRoX3RpbWUiOjE2NjUwMjE2NDEsImlkcCI6ImxvY2FsIiwicm9sZSI6ImFkbWluIiwicGhvbmVfbnVtYmVyX3ZlcmlmaWVkIjoiRmFsc2UiLCJlbWFpbCI6ImFkbWluQGFicC5pbyIsImVtYWlsX3ZlcmlmaWVkIjoiRmFsc2UiLCJuYW1lIjoiYWRtaW4iLCJpYXQiOjE2NjUwMjE2NDEsInNjb3BlIjpbIkVycCJdLCJhbXIiOlsicHdkIl19.l8rDfPoMX0N2oo6PbnMGZULUnBhyHvYCUw9gS1TNJxFoTMZI7HF-KKThD5YL1hWvhEXcJtTiEqJ6_LSK7cu9L5g0ZmugP5QV0Qq5ian6XfZ8ahAJ9BpZ2xcOhZGR3NnDf78KaBVybWsmUWeHTUSgUvmJ53oFNFWz7-45Aq6R0Xx1oExaIaM-RlUx8pfVB-6WdktPkvb4g_Sm3IEXCnE5pBBqDaZ1jXQMsl16a6Ve5XD1MiDC4HzdibA15L-D21nG808s4nkwtUWMgp5qlgL3p5qZfMWsbabaIf2UrcY-mH9yP4fASQcEpveT5P9SVxr6MMA0Ssl-UYvJmYs_B8w0Eg`
+          );
+        },
+        dataType: 'json',
+        data: 'result',
+        success: function (result) {
+          $(`#myTableStaff_${item_id} tr`).empty();
+          var header = $(`#myTableStaff_${item_id} thead`);
+          var body = $(`#myTableStaff_${item_id} tbody`);
+
+          htmlTime =
+            `<label for="startTime"></label> <input type="time" id="time" name="time" value="13:00">`;
+          var hTr;
+          // Headers
+          $(`#myTableStaff_${item_id} thead`)
+            .append($('<tr>')
+              .append(
+                $('<th>', {
+                  text: `Mã nhân viên`,
+                })
+              )
+              .append(
+                $('<th>', {
+                  text: `Nhân viên`,
+                })
+              )
+              .append(
+                $('<th>', {
+                  text: `Số điện thoại`,
+                })
+              )
+              .append(
+                $('<th>', {
+                  text: `Chỗ ở hiện tại`,
+                })
+              )
+              .append(
+                $('<th>', {
+                  text: `Email`,
+                })
+              )
+              .append(
+                $('<th>', {
+                  text: `Số CMND`,
+                })
+              )
+              .append(
+                $('<th>', {
+                  text: `Phân công `,
+                })
+              )
+              .append(
+                $('<th>', {
+                  text: `Thời gian nhận xe`,
+                })
+              )
+            )
+
+          // Body
+          for (var d in result.data) {
+            var data = result.data[d].attributes;
+            $(`#myTableStaff_${item_id} tbody`).append(
+              $('<tr>')
+              .append(
+                $('<td>', {
+                  html: `<input id="code" name="code" class="d-none" value=${data.code} />  ${data.code}`
+                })
+              )
+              .append(
+                $('<td>', {
+                  html: `<label for="owner_phone" class="control-label"> </label> <input type="text" id="fullName" name="fullName" class="d-none" value="${data.fullName}" />  ${data.fullName}`
+                })
+              )
+              .append(
+                $('<td>', {
+                  html: `<label for="phoneNumber" class="control-label"> </label> <input type="text" id="phoneNumber" name="phoneNumber" class="d-none" value="${data.phoneNumber}" />  ${data.phoneNumber}`
+
+                })
+              )
+              .append(
+                $('<td>', {
+                  html: `<label for="dateOfBirth" class="control-label"> </label> <input type="text" id="dateOfBirth" name="dateOfBirth" class="d-none" value="${data.dateOfBirth}" />  ${data.permanentAddress ? data.permanentAddress: '' }`
+
+                })
+              )
+              .append(
+                $('<td>', {
+                  text: data.email,
+                })
+              )
+              .append(
+                $('<td>', {
+                  html: `<label for="idCard" class="control-label"> </label> <input type="text" id="idCard" name="idCard" class="d-none" value="${data.idCard}" />  ${data.idCard}`
+
+                })
+              )
+              .append(
+                $('<td>', {
+                  html: `<div class="form-check"> <input  type="checkbox" class="form-check-input mt-0  radio" value="1" name="fooby[]" ${data.code == dataEmployee ? "checked" : null }  > <label class="form-check-label" ></label> </div>`,
+                })
+              )
+              .append(
+                $('<td>', {
+                  html: htmlTime,
+                })
+              )
+            );
+          }
+
+          $("input:checkbox").on('click', function () {
+            var $box = $(this);
+            if ($box.is(":checked")) {
+              var group = "input:checkbox[name='" + $box.attr(
+                "name") + "']";
+              $(group).prop("checked", false);
+
+              $box.prop("checked", true);
+            } else {
+              $box.prop("checked", false);
+            }
+          });
+
+        },
+      });
+
+    });;
+  });
+</script>

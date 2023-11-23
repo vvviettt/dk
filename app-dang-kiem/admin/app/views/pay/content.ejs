@@ -1,0 +1,262 @@
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="d-flex align-pays-center m-t-30 m-b-20">
+            <h4 class="title">
+                <a href="/management">
+                    Quản lý đăng kiểm
+                </a>
+                <i class="fa fa-angle-right p-r-10 p-l-10"></i>
+                <a href="/pay">
+                    Đã thanh toán
+                </a>
+                <i class="fa fa-angle-right p-r-10 p-l-10"></i>
+                Chi tiết
+            </h4>
+        </div>
+        <div class="row ">
+            <div class="col-lg-12">
+                <div class="card card-small">
+                    <div class="card-body">
+
+                        <h4 class="box-title pb-3 font-weight-bold text-uppercase">Thông tin chung</h4>
+
+                        <div class="row pt-3">
+                            <div class="col-md-4">
+                                <h6>Loại phượng
+                                    tiện</h6>
+                                <p class="font-weight-bold"><%= pay.types_name %></p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>Biển kiểm
+                                    soát</h6>
+                                <p class="font-weight-bold text-uppercase"><%= pay.license_plate %></p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>Chủ phương
+                                    tiện</h6>
+                                <p class="font-weight-bold"><%= pay.owner_name %></p>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row pt-3">
+                            <div class="col-md-4">
+                                <h6>Số điện thoại</h6>
+                                <p class="font-weight-bold"><%= pay.owner_phone %></p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>Ngày đăng kiểm</h6>
+                                <p class="font-weight-bold">
+                                    <%=("0" + pay.date.getDate()).slice(-2)%>/<%= ("0" + (pay.date.getMonth() + 1)).slice(-2) %>/<%= pay.date.getFullYear()%>
+                                </p>
+                            </div>
+                            <%if (pay.address === null | pay.address == '') { %>
+                            <% } else { %>
+                            <div class="col-md-4">
+                                <h6>Đăng kiểm hộ</h6>
+                                <img src="/assets/images/Group.svg" />
+                            </div>
+                            <% } %>
+                        </div>
+                        <%if (pay.address === null | pay.address == '') { %>
+                        <% } else { %>
+                        <hr />
+                        <div class="row pt-3">
+                            <div class="col-md-4">
+                                <div class="card card-small">
+                                    <h6>Địa chỉ nhận xe</h6>
+                                    <p class="font-weight-bold"><%= pay.address %></p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card card-small">
+                                    <h6>Nhân viên nhận xe</h6>
+                                    <p class="font-weight-bold"><%= pay.staff_name %></p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card card-small">
+                                    <h6>Thời gian nhận xe</h6>
+                                    <p class="font-weight-bold"><%= pay.car_delivery_time %></p>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 pt-3">
+                <div class="card-small d-flex justify-content-between">
+                    <div>
+                        <a href="/pay" type="button" class="btn btn-inverse">Đóng</a>
+                    </div>
+                    <div class="d-flex ">
+                        <form action="/pay/qualified/<%= pay.id %>" method="post">
+                            <input type="hidden" name="_method" value="patch">
+                            <button type="button" class="btn btn-obtain m-r-10" data-toggle="modal"
+                                data-target="#doupleModal<%= pay.id %>" data-id="<%= pay.id %>">
+                                Đạt
+                            </button>
+                            <% if (functions.update1 === 1) { %>
+                            <div class="modal fade" id="doupleModal<%= pay.id %>" tabindex="-1" role="dialog"
+                                aria-labelledby="doupleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="doupleModalLongTitle">Xác nhận</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Xác nhận kết quả đăng kiểm ĐẠT cho xe
+                                            <mark class="text-uppercase">
+                                                <%= pay.license_plate %>
+                                            </mark>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Hủy</button>
+                                            <button type="button" class="btn btn-success " data-dismiss="modal"
+                                                data-toggle="modal" data-target="#Modal<%= pay.id %>">Xác nhận</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="Modal<%= pay.id %>" tabindex="-1" role="dialog"
+                                aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="ModalLongTitle">Xác nhận Đạt</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <input type="hidden" name="_method" value="patch">
+                                                <div class="col-md-12 d-none">
+                                                    <div class="form-group">
+                                                        <input type="text" id="status" name="status"
+                                                            class="form-control form-control-label" value="2">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="plan_date" class="control-label">Có hiệu lực
+                                                            đến</label>
+                                                        <input name="plan_date" id="plan_date" type="date"
+                                                            class="form-control" value="">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="date" class="control-label">Thời hạn đóng phí kỳ
+                                                            tiếp
+                                                            theo</label>
+                                                        <input name="payment_date" id="payment_date" type="date"
+                                                            class="form-control" value="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Hủy</button>
+                                            <button type="submit" class="btn btn-success">Xác nhận</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } else { %>
+                            <div class="modal fade" id="doupleModal<%= pay.id %>" tabindex="-1" role="dialog"
+                                aria-labelledby="doupleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="doupleModalLongTitle">Thông báo</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h4 class="text-danger text-center">
+                                                Không được phép truy cập !!!
+                                            </h4>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Đóng</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+                        </form>
+
+
+                        <form action="/pay/substandard/<%= pay.id %>" method="post">
+                            <input type="hidden" name="_method" value="patch">
+                            <input type="text" id="status" name="status" class="form-control form-control-label d-none"
+                                value="1">
+                            <button type="button" class="btn btn-obtain" data-toggle="modal" style="color: #36383A;"
+                                data-target="#statusModal<%= pay.id %>" data-id="<%= pay.id %>">
+                                Không đạt
+                            </button>
+                            <% if (functions.update1 === 1) { %>
+                            <div class="modal fade" id="statusModal<%= pay.id %>" tabindex="-1" role="dialog"
+                                aria-labelledby="statusModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="statusModalLongTitle">Xác nhận</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Xác nhận kết quả đăng kiểm KHÔNG ĐẠT cho xe
+                                            <mark class="text-uppercase">
+                                                <%= pay.license_plate %>
+                                            </mark>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Hủy</button>
+                                            <button type="submit" class="btn btn-success">Xác nhận</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } else { %>
+                            <div class="modal fade" id="statusModal<%= pay.id %>" tabindex="-1" role="dialog"
+                                aria-labelledby="statusModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="statusModalLongTitle">Xác nhận</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h4 class="text-danger text-center">
+                                                Không được phép truy cập !!!
+                                            </h4>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Đóng</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>

@@ -1,0 +1,159 @@
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center m-t-30 m-b-20">
+            <h4 class="title">
+                <a href="/checked">
+                    Quản lý đăng kiểm
+                </a>
+                <i class="fa fa-angle-right p-r-10 p-l-10"></i>
+                Chỉnh sửa thông tin
+            </h4>
+        </div>
+        <div class="row ">
+            <div class="col-lg-12">
+                <div class="card card-small">
+                    <div class="card-body">
+                        <form action="/checked/<%= checked.id %>" method="post">
+                            <div class="form-body">
+                                <h4 class="box-title pb-3 text-uppercase font-weight-bold">Thông tin chung cần
+                                    chỉnh sửa</h4>
+                                <% if (typeof status !== 'undefined') { %>
+                                <%if (status == 'success') { %>
+                                <div style="color: green;">
+                                    Updated Successfully
+                                </div>
+                                <% } else { %>
+                                <div style="color: red;">
+                                    Some error occurred while editing the checked
+                                </div>
+                                <% } %>
+                                <br>
+                                <% } %>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="hidden" name="_method" value="put">
+                                            <label for="license_plate" class="control-label">Biển kiểm
+                                                soát</label>
+                                            <input type="text" name="license_plate" id="license_plate"
+                                                class="form-control form-control-label text-uppercase"
+                                                value="<%= checked.license_plate %>" readonly>
+                                        </div>
+                                    </div>
+                                    <div class=" col-md-6">
+                                        <div class="form-group">
+                                            <label for="owner_name" class="control-label">Chủ phương
+                                                tiện</label>
+                                            <input type="text" name="owner_name" id="owner_name"
+                                                class="form-control form-control-label bg-secondary"
+                                                value="<%= checked.owner_name %>" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class=" col-md-6">
+                                        <div class="form-group">
+                                            <label for="owner_phone" class="control-label">Số điện thoại</label>
+                                            <input type="text" name="owner_phone" id="owner_phone" readonly
+                                                class="form-control form-control-label bg-secondary"
+                                                value="<%= checked.owner_phone %>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="date" class="control-label">Ngày đăng kiểm</label>
+                                            <input name="date" id="date" type="date" readonly class="form-control"
+                                                value="<%= checked.date.getFullYear()%>-<%= ("0" + (checked.date.getMonth() + 1)).slice(-2) %>-<%=("0" + checked.date.getDate()).slice(-2)%>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 ">
+                                        <div class="form-group">
+                                            <label for="status">Trạng thái</label>
+                                            <select class="form-control form-select" name="status" id="status">
+                                                <option value="<%= checked.status %>" selected hidden>
+                                                    <%= checked.status == 1 ? "Không đạt" : "Đạt" %></option>
+                                                <option value="1">Không đạt</option>
+                                                <option value="2">Đạt</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 box-date">
+                                        <div class="form-group">
+                                            <label for="plan_date" class="control-label">Có hiệu lực đến
+                                                ngày</label>
+                                            <div class="input-group">
+                                                <input id="plan_date" name="plan_date" type="text" class="form-control"
+                                                    autocomplete="off" placeholder="dd/mm/yyyy"
+                                                    value="<%= ("0" + checked.plan_date.getDate()).slice(-2)%>/<%= ("0" + (checked.plan_date.getMonth() + 1)).slice(-2) %>/<%=checked.plan_date.getFullYear()%>" />
+                                                <label class="input-group-btn input-icon" for="plan_date">
+                                                    <span class="btn btn-default">
+                                                        <span class="glyphicon glyphicon-calendar">
+                                                            <img src="/assets/images/calendar.svg" />
+
+                                                        </span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 box-date">
+                                        <div class="form-group">
+                                            <label for="payment_date" class="control-label">Ngày đóng phí
+                                                BTĐB</label>
+                                            <div class="input-group">
+                                                <input id="payment_date" name="payment_date" type="text"
+                                                    class="form-control" autocomplete="off" placeholder="dd/mm/yyyy"
+                                                    value="<%= ("0" + checked.payment_date.getDate()).slice(-2)%>/<%= ("0" + (checked.payment_date.getMonth() + 1)).slice(-2) %>/<%=checked.payment_date.getFullYear()%>" />
+                                                <label class="input-group-btn input-icon" for="payment_date">
+                                                    <span class="btn btn-default">
+                                                        <span class="glyphicon glyphicon-calendar">
+                                                            <img src="/assets/images/calendar.svg" />
+                                                        </span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="action">
+                                    <a href="/checked" type="button" class="btn btn-inverse">Hủy</a>
+                                    <button type="submit" class="btn btn-success">Lưu</button>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+<script>
+    $(function () {
+        $('#payment_date').datepicker({
+            format: 'dd/mm/yyyy',
+        });
+        $('#plan_date').datepicker({
+            format: 'dd/mm/yyyy',
+        });
+    });
+    var selectStatus = $("#status").val();
+    if (selectStatus == 1) {
+        $('.box-date').hide();
+    } else {
+        $('.box-date').show();
+    }
+
+    $('#status').change(function () {
+        if ($("#status").val() == 1) {
+            $('.box-date').hide();
+            $('#payment_date').attr('disabled', true);
+            $('#plan_date').attr('disabled', true);
+        } else {
+            $('.box-date').show();
+            $('#payment_date').attr('disabled', false);
+            $('#plan_date').attr('disabled', false);
+        }
+    });
+</script>

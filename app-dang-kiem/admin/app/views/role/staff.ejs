@@ -1,0 +1,186 @@
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center m-t-30 m-b-20">
+            <h4 class="title">
+                <a href="/role">
+                    Phân quyền
+                </a>
+                <i class="fa fa-angle-right p-r-10 p-l-10"></i>
+                Chi tiết
+            </h4>
+        </div>
+        <div class="row ">
+            <div class="col-12">
+                <div class="card card-small">
+                    <div class="card-body">
+                        <h4 class="box-title font-weight-bold text-uppercase">Thông tin nhân viên</h4>
+                        <div class="row pt-3">
+                            <div class="col-md-4">
+                                <h6>Tên nhân viên</h6>
+                                <p class="font-weight-bold"><%= info.name %></p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>Số điện thoại</h6>
+                                <p class="font-weight-bold text-uppercase"><%= info.phone %></p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>Tên đăng nhập</h6>
+                                <p class="font-weight-bold"><%= info.username %></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <hr /> -->
+            <div class="col-12">
+                <form action="/role/<%= info.id %>" method="post" class='card-small'>
+                    <div class="card m-t-15">
+                        <div class="card-body">
+                            <h4 class="box-title font-weight-bold text-uppercase">Chi tiết phân quyền</h4>
+                            <div class="form-body">
+                                <table
+                                    class="table table-bordered-bt m-t-30 table-hover contact-list footable footable-5 footable-paging footable-paging-center breakpoint-lg">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" class="text-center">STT</th>
+                                            <th scope="col">Tên chức năng</th>
+                                            <th scope="col" class="text-center">Tất cả quyền</th>
+                                            <th scope="col" class="text-center">Xem</th>
+                                            <th scope="col" class="text-center">Sửa</th>
+                                            <th scope="col" class="text-center">Xóa</th>
+                                            <th scope="col" class="text-center">Thêm mới</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% role.map((item, index) => { %>
+                                        <tr>
+                                            <td class="font-weight-bold text-center"><%= index + 1 %></td>
+                                            <td><input type="hidden" name="_method" value="put">
+                                                <label for="id" class="control-label"><%= item.name_function %></label>
+                                                <input type="hidden" name="id" id="id" value="<%= item.id %>">
+                                                <label for="function_id" class="control-label"></label>
+                                                <input type="hidden" name="function_id" id="function_id"
+                                                    value="<%= item.function_id %>">
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="form-check ">
+                                                    <input type="checkbox"
+                                                        class="form-check-input check-all-js mt-0 all-checkbox"
+                                                        name="all" data-id="<%=item.id%>">
+                                                    <label class="form-check-label" for="all"></label>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="form-check">
+                                                    <input type="checkbox"
+                                                        class="form-check-input single-check-js mt-0 " id="read1"
+                                                        name="read1" data-id="<%=item.id%>"
+                                                        <%= item.read1? "checked":null %>>
+                                                    <label class="form-check-label" for="read1"></label>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="form-check">
+                                                    <input type="checkbox"
+                                                        class="form-check-input single-check-js mt-0 " id="update1"
+                                                        name="update1" data-id="<%=item.id%>"
+                                                        <%= item.update1? "checked":"" %>>
+                                                    <label class="form-check-label" for="update1"></label>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="form-check">
+                                                    <input type="checkbox"
+                                                        class="form-check-input single-check-js mt-0 " id="delete1"
+                                                        name="delete1" data-id="<%=item.id%>"
+                                                        <%= item.delete1? "checked":"" %>>
+                                                    <label class="form-check-label" for="delete1"></label>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input single-check-js mt-0"
+                                                        id="create1" name="create1" data-id="<%=item.id%>"
+                                                        <%= item.create1? "checked":"" %>>
+                                                    <label class="form-check-label" for="create1"></label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions d-flex justify-content-end">
+                        <button type="submit" class="btn btn-success"> Lưu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+<!-- 
+<script>
+    $('.form-check-input').click(function () {
+        const data = $(this).data('id');
+        if (
+            $(`input[data-id='${data}']`)[1].checked &&
+            $(`input[data-id='${data}']`)[2].checked &&
+            $(`input[data-id='${data}']`)[3].checked &&
+            $(`input[data-id='${data}']`)[4].checked
+        ) {
+            $(`.all-checkbox[data-id='${data}']`).attr('checked', true);
+        } else {
+            $(`.all-checkbox[data-id='${data}']`).attr('checked', false);
+        }
+    });
+    $('.all-checkbox').click(function () {
+        const data = $(this).data('id');
+        console.log('data: ', $(`input[data-id='${data}']`));
+        if ($(this)[0].checked) {
+            $(`input[data-id='${data}']`).attr('checked', true);
+        } else {
+            $(`input[data-id='${data}']`).attr('checked', false);
+        }
+    });
+    $('.all-checkbox').is(function () {
+        const data = $(this).data('id');
+        console.log('data2141: ', $(`input[data-id='${data}']`));
+        if (
+            $(`input[data-id='${data}']`)[1].checked &&
+            $(`input[data-id='${data}']`)[2].checked &&
+            $(`input[data-id='${data}']`)[3].checked &&
+            $(`input[data-id='${data}']`)[4].checked
+        ) {
+            $(`.all-checkbox[data-id='${data}']`).attr('checked', true);
+        } else {
+            $(`.all-checkbox[data-id='${data}']`).attr('checked', false);
+        }
+    });
+</script> -->
+
+<script>
+    $(function () {
+
+        $(`.check-all-js`).on('change', function () {
+            const data = $(this).data('id');
+            var single_check = $(`.single-check-js[data-id='${data}']`);
+            single_check.each((index, element) => {
+                element.checked = this.checked;
+            })
+        })
+        $(`.single-check-js`).on('change', function () {
+            const data = $(this).data('id');
+            var single_check = $(`.single-check-js[data-id='${data}']`);
+            var all_checked = true;
+            single_check.each((index, element) => {
+                if (element.checked === false) {
+                    all_checked = false;
+                }
+            })
+            document.querySelector(`.check-all-js[data-id='${data}']`).checked = all_checked;
+        })
+    })
+</script>

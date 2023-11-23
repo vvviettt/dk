@@ -1,0 +1,111 @@
+<div class="page-wrapper">
+  <div class="container-fluid">
+    <div class="row page-titles">
+      <div class="col-md-5 align-self-center">
+        <h4 class="text-themecolor">
+          Phương tiện có lỗi vi phạm
+        </h4>
+      </div>
+
+      <div class="col-md-7 align-self-center text-right">
+        <div class="d-flex justify-content-end align-items-center">
+          <form action="/file" enctype="multipart/form-data" method="post" class="form-import">
+            <input type="file" name="excel" id="file" onchange="this.form.submit()"
+              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+            <label for="file" class="btn-1"><img src="/assets/images/import.svg"> Import dữ liệu</label>
+          </form>
+          <a class="btn btn-primary m-l-15" href="/example/Mẫu import lỗi vi phạm.xlsx" download> <i
+              class="fas fa-arrow-circle-down"></i> Tải file Import mẫu </a>
+
+          <a href="/infringe/create" type="button" class="btn btn-success d-none d-lg-block m-l-15">
+            <i class="fa fa-plus-circle"></i> Thêm mới
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table id="config-table-category" class="table display table-bordered table-striped wrap">
+                <thead>
+                  <tr>
+                    <th>STT</th>
+                    <th>Biển kiểm soát</th>
+                    <th>Chủ phương tiện</th>
+                    <th>Ngày vi phạm</th>
+                    <th>Lỗi vi phạm</th>
+                    <th>Cơ quan xử lý</th>
+                    <th class="column-width">Trạng thái</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% infringe.map((item, index) => { %>
+                  <tr>
+                    <td><%= index + 1 %></td>
+                    <td class="text-uppercase"><%= licensePlateConvert(item.license_plate) %></td>
+                    <td><%= item.violator_name %></td>
+                    <td>
+                      <%= infringeDateConvert(item.infringe_date) %>
+                    </td>
+                    <td><%= item.infringes_name %></td>
+                    <td><%= item.handling_agency %></td>
+                    <td><% if (item.status === 1) { %>
+                      <span class='processed'>Đã xử lý</span>
+                      <% } else { %>
+                      <span class='unprocess'>Chưa xử lý</span>
+                      <% } %>
+                    </td>
+                    <td>
+                      <div class="d-flex justify-content-start">
+                        <a class="p-r-10" href="/infringe/edit/<%= item.id %>">
+                          <img src="/assets/images/Edit.svg" title="Chỉnh sửa" />
+                        </a>
+                        <br />
+                        <!-- <a href="/infringe/delete/<%= item.id %>"><img src="/assets/images/Delete.svg" title="Xóa" /></a> -->
+                        <button type="button" class="btn p-0" data-toggle="modal"
+                          data-target="#exampleModal<%= item.id %>" data-id="<%= item.id %>">
+                          <img src="/assets/images/Delete.svg" title="Xóa" />
+                        </button>
+                        <div class="modal fade" id="exampleModal<%= item.id %>" tabindex="-1" role="dialog"
+                          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">LƯU Ý</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                XÁC NHẬN XÓA lỗi vi phạm của phương tiện mang biển kiểm soát
+                                <mark class="text-uppercase">
+                                  <%= item.license_plate %>
+                                </mark>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                <a href="/Infringe/delete/<%= item.id %>"> Xác nhận</a>
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>

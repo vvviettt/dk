@@ -1,0 +1,144 @@
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center m-t-30 m-b-20">
+            <h4 class="title">
+                <a href="/management">
+                    Quản lý đăng kiểm
+                </a>
+                <i class="fa fa-angle-right p-r-10 p-l-10"></i>
+                Chỉnh sửa thông tin
+            </h4>
+        </div>
+        <div class="row ">
+            <div class="col-lg-12">
+                <div class="card card-small">
+                    <div class="card-body">
+                        <form action="/management/<%= management.id %>" method="post">
+                            <div class="form-body">
+                                <h4 class="box-title pb-3 text-uppercase font-weight-bold">Thông tin chung cần
+                                    chỉnh sửa</h4>
+                                <% if (typeof status !== 'undefined') { %>
+                                <%if (status == 'success') { %>
+                                <div style="color: green;">
+                                    Updated Successfully
+                                </div>
+                                <% } else { %>
+                                <div style="color: red;">
+                                    Some error occurred while editing the management
+                                </div>
+                                <% } %>
+                                <br>
+                                <% } %>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="vehicle_type_id" class="control-label">Loại phượng
+                                                tiện</label>
+                                            <select class="form-control form-select" name="vehicle_type_id"
+                                                id="vehicle_type_id">
+                                                <option selected hidden value="<%= management.vehicle_type_id %>">
+                                                    <%= management.types_name %></option>
+                                                <% types.map((item, index) => { %>
+                                                <option value="<%= item.id %>"><%= item.name %></option>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <input type="hidden" name="_method" value="put">
+                                            <label for="license_plate" class="control-label">Biển kiểm
+                                                soát</label>
+                                            <input type="text" name="license_plate" id="license_plate"
+                                                class="form-control form-control-label text-uppercase"
+                                                value="<%= management.license_plate %>">
+                                        </div>
+                                    </div>
+                                    <div class=" col-md-4">
+                                        <div class="form-group">
+                                            <label for="owner_name" class="control-label">Chủ phương
+                                                tiện</label>
+                                            <input type="text" name="owner_name" id="owner_name"
+                                                class="form-control form-control-label bg-secondary readonly"
+                                                value="<%= management.owner_name %>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class=" col-md-4">
+                                        <div class="form-group">
+                                            <label for="owner_phone" class="control-label">Số điện thoại</label>
+                                            <input type="text" name="owner_phone" id="owner_phone"
+                                                class="form-control form-control-label bg-secondary readonly"
+                                                value="<%= management.owner_phone %>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="date" class="control-label">Ngày đăng kiểm</label>
+                                            <div class="input-group">
+                                                <input id="date" name="date" type="text" class="form-control"
+                                                    autocomplete="off"
+                                                    value="<%= ("0" + management.date.getDate()).slice(-2)%>/<%= ("0" + (management.date.getMonth() + 1)).slice(-2) %>/<%=management.date.getFullYear()%>">
+                                                <label class="input-group-btn input-icon" for="date">
+                                                    <span class="btn btn-default">
+                                                        <span class="glyphicon glyphicon-calendar">
+                                                            <img src="/assets/images/calendar.svg" />
+                                                        </span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 ">
+                                        <div class="form-group d-flex flex-column align-items-start">
+                                            <label class="control-label">Đăng kiểm hộ</label>
+                                            <input id="more_info" type="checkbox"
+                                                <%= management.address ? "checked":"" %> />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" id="conditional_part">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="address" class="control-label">Địa chỉ nhận xe </label>
+                                            <input type="text" name="address" id="address"
+                                                class="form-control form-control-label"
+                                                value="<%= management.address %>"
+                                                placeholder="Số nhà, Đường, Phường(Xã), Quận(Huyện), Thành phố(Tỉnh)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="action">
+                                    <a href="/management" type="button" class="btn btn-inverse">Hủy</a>
+                                    <button type="submit" class="btn btn-success">Lưu</button>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+
+<script>
+    $(function () {
+        $('#date').datepicker({
+            format: 'dd/mm/yyyy',
+        });
+    });
+    if (!$('#more_info')[0].checked) {
+        $('#conditional_part').hide();
+    } else {
+        $('#conditional_part').show();
+    }
+    $('#more_info').change(function () {
+        if (!this.checked) {
+            $('#conditional_part').hide();
+            $('#address').attr('disabled', true);
+        } else {
+            $('#conditional_part').show();
+        }
+    });
+</script>

@@ -1,0 +1,97 @@
+<div class="page-wrapper">
+  <div class="container-fluid">
+    <div class="row page-titles">
+      <div class="col-md-5 align-self-center">
+        <h4 class="text-themecolor">
+          Cấu hình phí đăng kiểm hộ
+        </h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <form action="/fee" method="post" class='card-small'>
+          <div class="card">
+            <div class="card-body">
+              <div class="form-body">
+                <div>
+                  <table class="table table-bordered" id="faqs">
+                    <thead>
+                      <tr>
+                        <th>Khoảng cách</th>
+                        <th>Phí đăng kiểm hộ</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% fee.map((item, index) => { %>
+                      <tr>
+                        <td>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="row">
+                                <label class="control-label text-end col-md-2">Từ</label>
+                                <div class="col-md-10">
+                                  <div class="input-group">
+                                    <!-- <input type="hidden" name="_method" value="put"> -->
+                                    <input type="text" name="from" class="form-control form-control-label"
+                                      aria-label="Amount (to the nearest dollar)" value="<%= item.from %>">
+                                    <div class="input-group-append">
+                                      <span class="input-group-text">km</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="row">
+                                <label class="control-label text-end col-md-2">Đến </label>
+                                <div class="col-md-10">
+                                  <div class="input-group">
+                                    <input type="text" name="to" class="form-control form-control-label"
+                                      aria-label="Amount (to the nearest dollar)" value="<%= item.to %>">
+                                    <div class="input-group-append">
+                                      <span class="input-group-text">km</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="input-group">
+                            <input data-type="currency" type="text" name="fee" class="form-control form-control-label"
+                              aria-label="Amount (to the nearest dollar)"
+                              value="<%= new Intl.NumberFormat(['ban', 'id']).format(item.fee) %>">
+                            <div class="input-group-append">
+                              <span class="input-group-text">đ</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td><a href="/fee/delete/<%= item.id %>"><img src="/assets/images/Delete.svg" title="Xóa" /></a>
+                          <!-- <a href="/fee/<%= item.id %>"><img src="/assets/images/Edit.svg" title="Chỉnh sửa" /></a> -->
+                        </td>
+                      </tr>
+                      <% }) %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="align-self-center text-right">
+                <div class="d-flex justify-content-start align-items-center">
+                  <a type="button" class="btn btn-outline-primary d-none d-lg-block m-l-15" onclick="addNewRow();">
+                    <i class="fa fa-plus-circle"></i> Thêm dòng
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-actions d-flex justify-content-end">
+            <button type="submit" class="btn btn-success"> Lưu</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>

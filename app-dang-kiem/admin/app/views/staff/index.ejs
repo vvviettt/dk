@@ -1,0 +1,109 @@
+<div class="page-wrapper">
+  <div class="container-fluid">
+    <div class="row page-titles">
+      <div class="col-md-5 align-self-center">
+        <h4 class="text-themecolor">
+          Quản lý nhân viên
+        </h4>
+      </div>
+      <div class="col-md-7 align-self-center text-right">
+        <div class="d-flex justify-content-end align-items-center">
+          <a href="/staff/create" type="button" class="btn btn-success d-none d-lg-block m-l-15">
+            <img src='/assets/images/plus-circle.svg'> Thêm mới
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table id="config-table" class="table display table-bordered table-striped wrap">
+                <thead>
+                  <tr>
+                    <th>STT</th>
+                    <th>Tên nhân viên</th>
+                    <th>Số điện thoại</th>
+                    <th>Tên đăng nhập</th>
+                    <th>Sử dụng</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% staff.map((item, index) => { %>
+                  <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= item.name %></td>
+                    <td><%= item.phone %></td>
+                    <td><%= item.username %></td>
+                    <td>
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input " id="status" name="status" disabled
+                          <%= item.status ? "checked":"" %>>
+                        <label class="custom-control-label" for="status"></label>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="d-flex justify-content-start">
+                        <a class="p-r-10" href="/staff/edit/<%= item.id %>">
+                          <img src="/assets/images/Edit.svg" title="Chỉnh sửa" />
+                        </a>
+                        <br />
+                        <!-- <a href="/staff/delete/<%= item.id %>" > <img src="/assets/images/Delete.svg" title="Xóa" /> </a> -->
+                        <button type="button" class="btn p-0" data-toggle="modal"
+                          data-target="#exampleModal<%= item.id %>" data-id="<%= item.id %>">
+                          <img src="/assets/images/Delete.svg" title="Xóa" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <div class="modal fade" id="exampleModal<%= item.id %>" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLongTitle">Xác nhận</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <% if (item.status == 1) {%>
+                        <div class="modal-body">
+                          KHÔNG THỂ XÓA NHÂN VIÊN
+                          <mark>
+                            <%= item.name %>
+                          </mark>
+                          <p> Nhân viên vẫn ở trạng thái hoạt động nên không thể xóa!!!</p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                        </div>
+                        <%} else { %>
+                        <div class="modal-body">
+                          XÁC NHẬN XÓA NHÂN VIÊN
+                          <mark>
+                            <%= item.name %>
+                          </mark>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                          <a href="/staff/delete/<%= item.user_id_sso %>"> Xác nhận</a>
+                        </div>
+                        <%}%>
+                          
+                        </div>
+                      </div>
+                </div>
+                <% }) %>
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>

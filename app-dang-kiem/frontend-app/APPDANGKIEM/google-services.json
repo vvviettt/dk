@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "532269842178",
+    "project_id": "vitraco-30e89",
+    "storage_bucket": "vitraco-30e89.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:532269842178:android:d5b66cca76201262574c1b",
+        "android_client_info": {
+          "package_name": "com.APPDANGKIEM.SMARTEST"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "532269842178-c708agr9ttkg84i4ivg6r3kmfj3dp1aj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.APPDANGKIEM.SMARTEST",
+            "certificate_hash": "a066875bbf19ee8171cb74aa20345cdc92cdfa37"
+          }
+        },
+        {
+          "client_id": "532269842178-drapoddtd608gfjmiu2mk17nn3niopju.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqGlQSkT-ri_oERA9rU9KSAVHBsaI-Cek"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "532269842178-drapoddtd608gfjmiu2mk17nn3niopju.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

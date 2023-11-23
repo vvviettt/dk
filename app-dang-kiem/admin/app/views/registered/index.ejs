@@ -1,0 +1,157 @@
+<div class="page-wrapper">
+  <div class="container-fluid">
+    <div class="row page-titles">
+      <div class="col-md-5 align-self-center">
+        <h4 class="text-themecolor">
+          Báo cáo số xe đăng kiểm
+        </h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div>
+
+              <form action="/registered" method="get">
+                <div class="form-body">
+                  <div class="row container-fluid p-b-15">
+                    <div class="col-md-3">
+                      <div class="input-group">
+                        <input id="daterange" name="daterange" type="text" placeholder="dd/mm/yyyy - dd/mm/yyyy"
+                          autocomplete="off" class="form-control"
+                          <% if (typeof daterange != "undefined" && daterange) { %> value="<%= daterange %>" <% } %> />
+                        <label class="input-group-btn input-icon" for="daterange">
+                          <span class="btn btn-default  m-l-25">
+                            <span class="glyphicon glyphicon-calendar">
+                              <img src="/assets/images/calendar.svg" />
+                            </span>
+                          </span>
+                        </label>
+                      </div>
+                      <button type="submit" class="d-none">Search</button>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="input-group align-items-center">
+                        <label for="status" class="control-label mb-0 p-r-20 ">Trạng thái </label>
+                        <select class="form-control form-select " name="status" id="status"
+                          onchange="this.form.submit()">
+                          <option selected hidden> <% switch (status) {
+                            case '1' : %>
+                            Không đạt
+                            <% break;
+                            
+                            case '2' : %>
+                            Đạt
+                            <% break;
+                            
+                            case '3' : %>
+                            Tất cả trạng thái
+                            <% break;
+
+                            case '' : %>
+                            - Chọn -
+                            <% break;
+                            
+                            } %></option>
+                          <option value="3">Tất cả trạng thái</option>
+                          <option value="1">Không đạt</option>
+                          <option value="2">Đạt</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-6 ">
+
+                      <a href="/registered">
+                        <lord-icon src="https://cdn.lordicon.com/akuwjdzh.json" trigger="hover" class="mt-1"
+                          style="width:25px;height:30px">
+                        </lord-icon>
+                      </a>
+
+                    </div>
+                  </div>
+              </form>
+
+              <div class="table-responsive">
+                <table id="example23" cellspacing="0" width="100%"
+                  class="table display table-bordered table-striped no-wrap">
+                  <thead>
+                    <tr>
+                      <th scope="col">STT</th>
+                      <th scope="col">Biển kiểm soát</th>
+                      <th scope="col">Số điện thoại</th>
+                      <th scope="col">Ngày đăng kiểm</th>
+                      <th scope="col" class="column-width">Trạng thái</th>
+                      <th scope="col">Có hiệu lực đến </th>
+                      <th scope="col">Hạn nộp phí đường bộ</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+
+                    <% registered.items.map((item, index)=> { %>
+
+                    <tr>
+                      <td>
+                        <%= index + 1 %>
+                      </td>
+                      <td class="text-uppercase">
+                        <%= registered.licensePlateConvert(item.license_plate) %>
+
+                      </td>
+
+                      <td>
+                        <%= item.owner_phone %>
+                      </td>
+                      <td>
+                        <%= registered.dateConvert(new Date(item.date)) %>
+                      </td>
+                      <td>
+                        <% if (item.status==1) { %>
+                        <span class='unprocess'>Không đạt</span>
+                        <% } else { %>
+                        <span class='processed'>Đạt</span>
+                        <% } %>
+                      </td>
+                      <td>
+                        <%= item.status==1 ? "" : registered.dateConvert(new Date(item.plan_date)) %>
+                      </td>
+                      <td>
+                        <%= item.status==1 ? "" : registered.dateConvert(new Date(item.payment_date)) %>
+                      </td>
+
+                    </tr>
+                    <% }) %>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <th colspan="6"></th>
+                      <th class="font-16">Tổng số xe đã đăng kiểm: <%= registered.items.length %> </th>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdn.lordicon.com/qjzruarw.js"></script>
+<script>
+  $('#daterange').change(function () {
+    console.log("AAAAAAA", $('#daterange').val());
+    // if ($("#daterange").val() == 1) {
+    //     $('.box-date').hide();
+    //     $('#payment_date').attr('disabled', true);
+    //     $('#plan_date').attr('disabled', true);
+    // } else {
+    //     $('.box-date').show();
+    //     $('#payment_date').attr('disabled', false);
+    //     $('#plan_date').attr('disabled', false);
+    // }
+  });
+</script>

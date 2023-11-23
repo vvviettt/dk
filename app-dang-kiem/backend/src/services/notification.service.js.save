@@ -1,0 +1,160 @@
+
+const query = require("../model/query.model");
+const CronJob = require("node-cron");
+const { Expo } = require("expo-server-sdk");
+const registryService = require("./registry.service");
+
+const notificationHandle = async () => {
+    const scheduledNotifications = CronJob.schedule("0 * * * * *", async () => {
+        try {
+            const timeConfig = await getTimeSendNotification();
+            const date = new Date();
+//            if (`${date.getHours()}:${date.getMinutes()}:00` === timeConfig[0].time) {
+                const registryDevice = await getDeviceForRegistry(
+                    timeConfig[0].day_before_registry
+                );
+console.log("ok");
+
+                const expiredDevice = await getDeviceForExpired(timeConfig[0].day_before_expired);
+                sendNotification(handleDataMessage(registryDevice, "REGISTRY"));
+                sendNotification(handleDataMessage(expiredDevice, "EXPIRED"));
+  //          }
+        } catch (error) {
+            console.log(error);
+        }
+    });
+
+    scheduledNotifications.start();
+};
+const getAllNotifications = (userId, limit, page) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const notifications = await query(
+                `SELECT id , notification_type_id as type ,content, is_read , create_at as time FROM notifications WHERE user_id = ${userId} ORDER BY notifications.create_at DESC LIMIT ${limit} OFFSET ${
+                    (page - 1) * limit
+                };`
+            );
+            resolve(notifications);
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+const getTimeSendNotification = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const config = await query(
+                "SELECT notification_setting.day_before_registry , notification_setting.day_before_expired , notification_setting.time FROM `notification_setting` limit 1;"
+            );
+            resolve(config);
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+const getDeviceForRegistry = async (time) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const devices =
+                await query(`SELECT device_tokens.token , registry_managements.license_plate , registry_managements.date FROM device_tokens INNER JOIN registry_managements on registry_managements.owner_id=device_tokens.user_id and registry_managements.completed_at is null and datediff( registry_managements.date,CURRENT_DATE)>0 AND datediff( registry_managements.date,CURRENT_DATE)<${time} GROUP BY registry_managements.license_plate , device_tokens.token;
+    `);
+            resolve(devices);
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+const getDeviceForExpired = async (time) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const devices =
+                await query(`SELECT device_tokens.token , registry_managements.license_plate , registry_managements.plan_date as date FROM device_tokens INNER JOIN registry_managements ON registry_managements.owner_id = device_tokens.user_id AND datediff(registry_managements.plan_date , CURRENT_DATE) >=0 AND datediff(registry_managements.plan_date , CURRENT_DATE)<${time} GROUP BY registry_managements.license_plate, device_tokens.token;
+    `);
+            resolve(devices);
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+const addNotifications = (data) => {};
+
+const sendNotification = (data) => {
+    let expo = new Expo({ accessToken: process.env.EXPO_ACCESS_TOKEN });
+    let messages = [];
+    for (let push of data) {
+        if (!Expo.isExpoPushToken(push.token)) {
+            console.error(`Push token ${push.token} is not a valid Expo push token`);
+            continue;
+        }
+
+        messages.push({
+            to: push.token,
+            sound: "default",
+            title: push.title,
+            body: push.body,
+            data: { withSome: "data" },
+        });
+    }
+    let chunks = expo.chunkPushNotifications(messages);
+    let tickets = [];
+    (async () => {
+        for (let chunk of chunks) {
+            try {
+                let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+                console.log(ticketChunk);
+                tickets.push(...ticketChunk);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    })();
+};
+
+const handleDataMessage = (data, type) => {
+    const result = [];
+    switch (type) {
+        case "REGISTRY": {
+            data.forEach((a) => {
+                const date = new Date(a.date);
+                result.push({
+                    title: "Nhắc lịch đăng kiểm",
+                    body: `Xe ${a.license_plate} có lịch đăng kiểm vào ngày ${date.getDate()}/${
+                        date.getMonth() + 1
+                    }/${date.getFullYear()}.`,
+                    token: a.token,
+                });
+            });
+            break;
+        }
+        case "EXPIRED": {
+            data.forEach((a) => {
+                const date = new Date(a.date);
+                result.push({
+                    title: "Xe hết hạn đăng kiểm",
+                    body: `Xe ${a.license_plate} sẽ hết hạn đăng kiểm vào ngày  ${date.getDate()}/${
+                        date.getMonth() + 1
+                    }/${date.getFullYear()}.`,
+                    token: a.token,
+                });
+            });
+            break;
+        }
+        case "INFRINGES": {
+            data.forEach((a) => {
+                const date = new Date(a.date);
+                result.push({
+                    title: "Lỗi vi phạm",
+                    body: `Xe của bạn có lỗi    `,
+                    token: a.token,
+                });
+            });
+            break;
+        }
+    }
+    return result;
+};
+module.exports = { getAllNotifications, notificationHandle };

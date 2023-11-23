@@ -1,0 +1,53 @@
+const {
+    getAllNotifications,
+    getNotificationsWithId,
+} = require("../../services/notification.service");
+const carService = require("../../services/car.service");
+const registryService = require("../../services/registry.service");
+const response = require("../../utils/response");
+const { listenerCount } = require("../../model/connection.model");
+
+const getNotifications = async (req, res, next) => {
+    try {
+        const user = req.user;
+        const limit = req.query.limit || 10;
+        const page = req.query.page || 1;
+        const notifications = await getAllNotifications(user.id, limit, page);
+        return res
+            .status(200)
+            .json(
+                response({ rows: notifications, recordsTotal: notifications.length }, "Success", 1)
+            );
+    } catch (error) {
+        return res.status(500).json(response({}, error.message, 0));
+    }
+};
+
+const sendInfringesNotification = (req, res) => {
+    // data = {{
+    // }}
+};
+
+const getNotificationInfo = async (req, res) => {
+    // console.log("hhh");
+    try {
+        const notification = await getNotificationsWithId(req.query.id, req.user.id);
+        switch (notification.type) {
+            case (1, 2):
+                const registry = await registryService.getRegistriesByLicensePlate(
+                    notification.data
+                );
+		console.log("no");
+              notificationnotification.date = registry.date;
+                break;
+            default:
+                break;
+        }
+        return res.status(200).json(response(notification, "Success", 1));
+    } catch (error) {
+console.log(error);
+        return res.status(200).json(response({}, "Failed", 0));
+    }
+};
+
+module.exports = { getNotifications, getNotificationInfo, sendInfringesNotification };

@@ -1,0 +1,144 @@
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center m-t-30 m-b-20">
+            <h4 class="title">
+                <a href="/staff">
+                    Quản lý nhân viên
+                </a>
+                <i class="fa fa-angle-right p-r-10 p-l-10"></i>
+                Chỉnh sửa thông tin
+            </h4>
+        </div>
+        <div class="row ">
+            <div class="col-lg-12">
+                <div class="card card-small">
+                    <div class="card-body">
+                        <form action="/staff/<%= staff.id %>" method="post" novalidate>
+                            <div class="form-body">
+                                <h4 class="box-title pb-3 text-uppercase font-weight-bold">Thông tin chung cần
+                                    chỉnh sửa</h4>
+                                <% if (typeof status !== 'undefined') { %>
+                                <%if (status == 'success') { %>
+                                <div style="color: green;">
+                                    Updated Successfully
+                                </div>
+                                <% } else { %>
+                                <div style="color: red;">
+                                    Some error occurred while editing the staff
+                                </div>
+                                <% } %>
+                                <br>
+                                <% } %>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <input type="hidden" name="_method" value="put">
+                                            <label for="name">Tên nhân viên</label>
+                                            <input type="text" id="name" name="name"
+                                                class="form-control form-control-label" value="<%= staff.name %>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="phone">Số điện thoại</label>
+                                            <input type="text" id="phone" name="phone"
+                                                class="form-control form-control-label" value="<%= staff.phone %>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="email">Email</label>
+                                            <input type="text" id="email" name="email"
+                                                class="form-control form-control-label" value="<%= staff.email %>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="adress">Địa chỉ</label>
+                                            <input type="text" id="adress" name="adress"
+                                                class="form-control form-control-label" value="<%= staff.adress %>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="username">Tên đăng nhập</label>
+                                            <input type="text" id="username" name="username"
+                                                class="form-control form-control-label" value="<%= staff.username %>">
+                                            <input type="text" id="user_id_sso" name="user_id_sso"
+                                                class="form-control form-control-label d-none"
+                                                value="<%= staff.user_id_sso %>">
+                                            <input type="text" id="concurrency_stamp" name="concurrency_stamp"
+                                                class="form-control form-control-label d-none"
+                                                value="<%= staff.concurrency_stamp %>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 d-flex justify-content-between">
+                                        <div class="form-group">
+                                            <label for="status">Sử dụng</label>
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" id="status"
+                                                    name="status" <%= staff.status ? "checked":"" %>>
+                                                <label class="custom-control-label" for="status"></label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group d-flex flex-column align-items-start">
+                                            <label class="control-label">Thay đổi mật khẩu</label>
+                                            <input id="more_info" type="checkbox" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="conditional_part">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="password">Mật khẩu mới</label>
+                                                <input type="password" id="password" name="password"
+                                                    class="form-control form-control-label" placeholder="Nhập"
+                                                    aria-invalid="true"
+                                                    data-validation-regex-message="Tối thiểu 6 ký tự, ít nhất một ký tự hoa, một ký tự thường, một số và một ký tự đặc biệt"
+                                                    data-validation-regex-regex="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}">
+                                                <div class="help-block"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="password">Nhập lại mật khẩu mới</label>
+                                                <input type="password" id="confirm_password" name="confirm_password"
+                                                    class="form-control form-control-label" placeholder="Nhập">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% if (typeof conflictError != "undefined" && conflictError) { %>
+                                <div class="text-danger text-left  mb-3"><%= conflictError %></div>
+                                <% } %>
+                                <div class="action">
+                                    <a href="/staff" type="button" class="btn btn-inverse">
+                                        Hủy
+                                    </a>
+                                    <button type="submit" class="btn btn-success">Lưu</button>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+
+<script>
+    $('#more_info').change(function () {
+        if (this.checked != true) {
+            $("#conditional_part").hide();
+            $("#password").attr("disabled", true);
+            $("#confirm_password").attr("disabled", true);
+        } else {
+            $("#conditional_part").show();
+            $("#password").attr("disabled", false);
+            $("#confirm_password").attr("disabled", false);
+        }
+    });
+</script>

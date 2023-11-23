@@ -1,0 +1,122 @@
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center m-t-30 m-b-20">
+            <h4 class="title">
+                <a href="/infringe">
+                    Phương tiện có lỗi vi phạm
+                </a>
+                <i class="fa fa-angle-right p-r-10 p-l-10"></i>
+                Thêm mới
+            </h4>
+        </div>
+        <div class="row ">
+            <div class="col-lg-12">
+                <div class="card card-small">
+                    <div class="card-body">
+                        <form action="/infringe" method="post" novalidate class="contact-form">
+                            <div class="form-body">
+                                <h4 class="box-title pb-3 text-uppercase font-weight-bold">Thông tin chung</h4>
+                                <div class="row">
+                                    <!--/span-->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="license_plate" class="control-label">Biển kiểm
+                                                soát</label>
+                                            <input type="text" name="license_plate" id="license_plate"
+                                                class="form-control form-control-label text-uppercase"
+                                                placeholder="Ví dụ: 43A - 12345" required
+                                                data-validation-required-message="Vui lòng nhập Biển kiểm soát"
+                                                aria-invalid="true">
+                                            <div class="invalid-feedback"></div>
+                                            <div class="help-block"></div>
+                                        </div>
+                                        <!--/span-->
+                                        <!--/span-->
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="violator_name" class="control-label">Chủ phương
+                                                tiện</label>
+                                            <input type="text" name="violator_name" id="violator_name"
+                                                class="form-control form-control-label bg-secondary">
+                                            <div class="invalid-feedback"></div>
+                                            <div class="help-block"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="infringe_date" class="control-label">Ngày vi
+                                                phạm</label>
+                                            <div class="input-group">
+                                                <input id="infringe_date" name="infringe_date" type="text"
+                                                    class="form-control" placeholder="dd/mm/yyyy" autocomplete="off"
+                                                    required
+                                                    data-validation-required-message="Vui lòng nhập Ngày vi phạm"
+                                                    data-validation-regex-message="Vui lòng nhập đúng định dạng dd/mm/yyyy"
+                                                    aria-invalid="true"
+                                                    data-validation-regex-regex="(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})" />
+                                                <label class="input-group-btn input-icon" for="infringe_date">
+                                                    <span class="btn btn-default">
+                                                        <span class="glyphicon glyphicon-calendar">
+                                                            <img src="/assets/images/calendar.svg" />
+                                                        </span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <div class="help-block"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="infringes_name">Lỗi vi phạm</label>
+                                            <input type="text" id="infringes_name" name="infringes_name"
+                                                class="form-control form-control-label" placeholder="Nhập" required
+                                                data-validation-required-message="Vui lòng nhập Lỗi vi phạm"
+                                                aria-invalid="true">
+                                            <div class="invalid-feedback"></div>
+                                            <div class="help-block"></div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="handling_agency" class="control-label">Cơ quan xử
+                                                lý</label>
+                                            <input type="text" name="handling_agency" id="handling_agency"
+                                                class="form-control form-control-label" placeholder="- Nhập -" required
+                                                data-validation-required-message="Vui lòng nhập Cơ quan xử
+                                                        lý" aria-invalid="true">
+                                            <div class="invalid-feedback"></div>
+                                            <div class="help-block"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="status">Trạng thái</label>
+                                            <select class="form-control form-select" name="status" id="status" required
+                                                data-validation-required-message="Vui lòng chọn Loại phương tiện">
+                                                <option selected hidden value="">- Chọn -</option>
+                                                <option value="1">Đã xử lý</option>
+                                                <option value="0">Chưa xử lý</option>
+                                            </select>
+                                            <div class="help-block"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <a href="/infringe" type="button" class="btn btn-inverse">Hủy</a>
+                                    <button type="submit" class="btn btn-success">
+                                        Lưu</button>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>

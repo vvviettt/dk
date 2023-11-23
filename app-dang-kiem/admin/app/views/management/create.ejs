@@ -1,0 +1,183 @@
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center m-t-30 m-b-20">
+            <h4 class="title">
+                <a href="/management">
+                    Quản lý đăng kiểm
+                </a>
+                <i class="fa fa-angle-right p-r-10 p-l-10"></i>
+                Thêm mới
+            </h4>
+        </div>
+        <div class="row ">
+            <div class="col-lg-12">
+                <div class="card card-small">
+                    <div class="card-body">
+                        <form action="/management" method="post" novalidate>
+                            <div class="form-body">
+                                <h4 class="box-title text-uppercase font-weight-bold">Thông tin chung</h4>
+                                <hr>
+                                <% if (typeof status !=='undefined' ) { %>
+                                <% if (status=='success' ) { %>
+                                <div style="color: green;">
+                                    Created Successfully
+                                </div>
+                                <% } else { %>
+                                <div style="color: red;">
+                                    Some error occurred while creating the category
+                                </div>
+                                <% } %>
+                                <br>
+                                <% } %>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="vehicle_type_id" class="control-label">Loại phượng
+                                                tiện</label>
+                                            <select class="form-control form-select" name="vehicle_type_id"
+                                                id="vehicle_type_id" required
+                                                data-validation-required-message="Vui lòng chọn Loại phương tiện">
+                                                <option selected hidden value=""> - Chọn - </option>
+                                                <% types.map((item, index) => { %>
+                                                <option value="<%= item.id %>"><%= item.name %></option>
+                                                <% }) %>
+                                            </select>
+                                            <div class="help-block"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="license_plate" class="control-label">Biển kiểm
+                                                soát</label>
+                                            <input type="text" name="license_plate" id="license_plate"
+                                                class="form-control form-control-label text-uppercase"
+                                                placeholder="Nhập" required
+                                                data-validation-required-message="Vui lòng nhập Biển kiểm soát"
+                                                aria-invalid="true">
+                                            <div class="help-block"></div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="owner_name" class="control-label">Chủ phương
+                                                tiện</label>
+                                            <input type="text" name="owner_name" id="owner_name"
+                                                class="form-control form-control-label" placeholder="Nhập">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="owner_phone" class="control-label">Số điện thoại</label>
+                                            <input type="number" name="owner_phone" id="owner_phone"
+                                                class="form-control form-control-label" placeholder="Nhập" required
+                                                data-validation-required-message="Vui lòng nhập Số điện thoại"
+                                                data-validation-regex-message="Vui lòng nhập đúng định dạng SĐT"
+                                                aria-invalid="true"
+                                                data-validation-regex-regex="(\+84|84|0){1}([3|5|7|8|9]){1}([0-9]{8})">
+                                            <div class="help-block"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="date" class="control-label">Ngày đăng kiểm</label>
+                                            <div class="input-group">
+                                                <input id="date" name="date" type="text" class="form-control"
+                                                    placeholder="dd/mm/yyyy" autocomplete="off" required
+                                                    data-validation-required-message="Vui lòng nhập Ngày đăng kiểm"
+                                                    data-validation-regex-message="Vui lòng nhập đúng định dạng dd/mm/yyyy"
+                                                    aria-invalid="true"
+                                                    data-validation-regex-regex="(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})" />
+                                                <label class="input-group-btn input-icon" for="date">
+                                                    <span class="btn btn-default">
+                                                        <span class="glyphicon glyphicon-calendar">
+                                                            <img src="/assets/images/calendar.svg" />
+                                                        </span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <div class="help-block"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 ">
+                                        <div class="form-group d-flex flex-column align-items-start">
+                                            <label class="control-label">Đăng kiểm hộ</label>
+                                            <input id="more_info" type="checkbox" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" id="conditional_part">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="address" class="control-label"> Địa chỉ nhận xe </label>
+                                            <input type="text" name="address" id="address"
+                                                class="form-control form-control-label"
+                                                placeholder="Số nhà, Đường, Phường(Xã), Quận(Huyện), Thành phố(Tỉnh)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <a href="/management" type="button" class="btn btn-inverse">Hủy</a>
+                                    <button type="button" class="btn btn-success" id="check-data" data-toggle="modal"
+                                        data-target="#exampleModalCenter">
+                                        Lưu
+                                    </button>
+                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+                                        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLongTitle">Thông báo
+                                                    </h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body p-25 ">
+                                                    <h5 class="check-data-mess m-0 text-center">
+                                                    </h5>
+                                                </div>
+                                                <div class="modal-footer ">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal">Không</button>
+                                                    <button type="submit" class="btn btn-success"
+                                                        id="submit-close-modal">Có</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+
+<script>
+    $(function () {
+        $('#date').datepicker({
+            format: 'dd/mm/yyyy',
+        });
+    });
+    if (!$('#more_info')[0].checked) {
+        $('#conditional_part').hide();
+    } else {
+        $('#conditional_part').show();
+    }
+    $('#more_info').change(function () {
+        if (!this.checked) {
+            $('#conditional_part').hide();
+            $('#address').attr('disabled', true);
+        } else {
+            $('#conditional_part').show();
+            $('#address').attr('disabled', false);
+        }
+    });
+</script>

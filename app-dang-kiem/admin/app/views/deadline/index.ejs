@@ -1,0 +1,103 @@
+<div class="page-wrapper">
+  <div class="container-fluid">
+    <div class="row page-titles">
+      <div class="col-md-5 align-self-center">
+        <h4 class="text-themecolor">
+          Báo cáo phương tiện sắp tới hạn đăng kiểm
+        </h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div>
+              <form action="/deadline" method="get">
+                <div class="form-body">
+                  <div class="row p-r-25 p-l-25 p-b-15 ">
+                    <div class="col-md-4">
+                      <!-- <div class="form-group"> -->
+                      <div class="input-group align-items-center">
+                        <label for="owner_name" class="control-label mb-0 pr-2 ">Ngày đăng kiểm</label>
+                        <input id="date" name="date" type="text" class="form-control" placeholder="dd/mm/yyyy"
+                          autocomplete="off" <% if (typeof date1 != "undefined" && date1) { %> value="<%= date1 %>"
+                          <% } %> />
+                        <label class="input-group-btn input-icon" for="date">
+                          <span class="btn btn-default">
+                            <span class="glyphicon glyphicon-calendar">
+                              <img src="/assets/images/calendar.svg" /></i>
+                            </span>
+                          </span>
+                        </label>
+                        <!-- </div> -->
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <!-- <div class="form-group"> -->
+                      <div class="input-group align-items-center">
+                        <label for="value" class="control-label mb-0 pr-2 ">Số ngày sắp tới hạn</label>
+                        <input type="text" name="value" id="value" class="form-control form-control-label"
+                          onchange="this.form.submit();" placeholder="Nhập"
+                          <% if (typeof value != "undefined" && value) { %> value="<%= value %>" <% } %>>
+                      </div>
+                      <!-- </div> -->
+                    </div>
+                    <div class="col-md-4 ">
+                      <div class="d-flex align-items-center h-100">
+                        <a href="/deadline">
+                          <lord-icon src="https://cdn.lordicon.com/akuwjdzh.json" trigger="hover" class="mt-1"
+                            style="width:25px;height:30px">
+                          </lord-icon>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- <button type="submit" class="d-none">Search</button> -->
+              </form>
+              <div class="table-responsive">
+                <table id="example23" class="table display table-bordered table-striped wrap">
+                  <thead>
+                    <tr>
+                      <th>STT</th>
+                      <th>Biển kiểm soát</th>
+                      <th>Số điện thoại</th>
+                      <th style="width: 195px;">Lỗi vi phạm</th>
+                      <th>Ngày hết hạn đăng kiểm</th>
+                      <th>Ngày nộp phí đường bộ kỳ tiếp theo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% deadline.items.map((item, index) => { %>
+                    <tr>
+                      <td><%= index + 1 %></td>
+                      <td class="text-uppercase"> <%= deadline.licensePlateConvert(item.license_plate) %> </td>
+                      <td><%= item.owner_phone %></td>
+                      <td><%= item.infringes_name %></td>
+                      <td><%= deadline.dateConvert(new Date(item.plan_date)) %></td>
+                      <td><%= deadline.dateConvert(new Date(item.payment_date))  %></td>
+                    </tr>
+
+                    <% }) %>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+<script src="https://cdn.lordicon.com/qjzruarw.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script>
+  $(function () {
+    $('#date').datepicker({
+      format: 'dd/mm/yyyy',
+    });
+  });
+</script>

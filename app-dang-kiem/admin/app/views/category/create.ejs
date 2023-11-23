@@ -1,0 +1,94 @@
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center m-t-30 m-b-20">
+            <h4 class="title">
+                <a href="/category">
+                    Phí kiểm định phương tiện
+                </a>
+                <i class="fa fa-angle-right p-r-10 p-l-10"></i>
+                Thêm mới
+            </h4>
+        </div>
+        <div class="row ">
+            <div class="col-lg-12">
+                <div class="card card-small">
+                    <div class="card-body">
+                        <form action="/category" method="post" novalidate>
+                            <div class="form-body">
+                                <h4 class="box-title pb-3 text-uppercase font-weight-bold">Thông tin chung</h4>
+                                <% if (typeof status !=='undefined' ) { %>
+                                <%if (status=='success' ) { %>
+                                <div style="color: green;">
+                                    Created Successfully
+                                </div>
+                                <% } else { %>
+                                <div style="color: red;">
+                                    Some error occurred while creating the category
+                                </div>
+                                <% } %>
+                                <br>
+                                <% } %>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="name">Chủng loại phương tiện</label>
+                                            <input type="text" id="name" name="name"
+                                                class="form-control form-control-label" placeholder="Nhập" required
+                                                data-validation-required-message="Vui lòng nhập Chủng loại phương tiện"
+                                                aria-invalid="true">
+                                            <div class="help-block"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="tariff" class="control-label">Biểu phí</label>
+                                            <div class="input-group">
+                                                <input data-type="currency" type="text" id="tariff" name="tariff"
+                                                    class="form-control form-control-label"
+                                                    aria-label="Amount (to the nearest dollar)" placeholder="0" required
+                                                    data-validation-required-message="Vui lòng nhập Biểu phí"
+                                                    data-validation-regex-message="Vui lòng nhập đúng định dạng Biểu phí"
+                                                    aria-invalid="true"
+                                                    data-validation-regex-regex="([1-9]\d{0,2}(.\d{3})*)|0">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">đ</span>
+                                                </div>
+                                            </div>
+                                            <div class="help-block"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="license_fee" class="control-label">Phí cấp giấy chứng
+                                                nhận kiểm định</label>
+                                            <div class="input-group">
+                                                <input data-type="currency" type="text" id="license_fee"
+                                                    name="license_fee" class="form-control form-control-label"
+                                                    aria-label="Amount (to the nearest dollar)" placeholder="0" required
+                                                    data-validation-required-message="Vui lòng nhập Phí cấp giấy"
+                                                    data-validation-regex-message="Vui lòng nhập đúng định dạng Phí cấp giấy"
+                                                    aria-invalid="true"
+                                                    data-validation-regex-regex="([1-9]\d{0,2}(.\d{3})*)|0">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">đ</span>
+                                                </div>
+                                            </div>
+                                            <div class="help-block"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <a href="/category" type="button" class="btn btn-inverse">Hủy</a>
+                                    <button type="submit" class="btn btn-success">Lưu</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>

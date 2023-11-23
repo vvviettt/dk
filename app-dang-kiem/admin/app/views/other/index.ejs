@@ -1,0 +1,55 @@
+<div class="page-wrapper">
+  <div class="container-fluid">
+    <div class="row page-titles">
+      <div class="col-md-5 align-self-center">
+        <h4 class="text-themecolor">
+          Cấu hình thông báo
+        </h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <form action="/other" method="post" class='card-small'>
+          <div class="card">
+            <div class="card-body">
+              <div class="form-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="allowed_days">Số ngày cho phép tạo đăng kiểm mới nếu chưa hoàn thành đăng kiểm trước
+                        đó</label>
+                      <div class="input-group">
+                        <input type="hidden" name="_method" value="put">
+                        <input type="number" id="allowed_days" name="allowed_days"
+                          class="form-control form-control-label" value="<%= other.allowed_days %>">
+                        <div class="input-group-append">
+                          <span class="input-group-text">Ngày</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="number_vehicles">Số lượng xe được đăng ký cùng thời điểm</label>
+                      <div class="input-group">
+                        <input type="number" id="number_vehicles" name="number_vehicles"
+                          class="form-control form-control-label" value="<%= other.number_vehicles %>">
+                        <div class="input-group-append">
+                          <span class="input-group-text">Xe</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-actions d-flex justify-content-end">
+            <button type="submit" class="btn btn-success">Lưu</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>

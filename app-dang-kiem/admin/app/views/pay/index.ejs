@@ -1,0 +1,285 @@
+<div class="page-wrapper">
+  <div class="container-fluid">
+    <div class="row page-titles">
+      <div class="col-md-5 align-self-center">
+        <h4 class="text-themecolor">
+          Quản lý đăng kiểm
+        </h4>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div>
+              <div class="d-flex justify-content-between align-item-center sidebar-nav p-0 side-manager">
+                <ul id="sidebarnav" class="d-flex">
+                  <li>
+                    <a class="waves-effect waves-dark" href="/management" aria-expanded="false">
+                      <span class="hide-menu">Đã đăng ký </span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="waves-effect waves-dark" href="/pay" aria-expanded="false">
+                      <span class="hide-menu">Đã thanh toán (<%= pay.items.length %>) </span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="waves-effect waves-dark" href="/checked" aria-expanded="false">
+                      <span class="hide-menu">Đã đăng kiểm </span>
+                    </a>
+                  </li>
+                </ul>
+                <div class="row p-t-15">
+                  <div class="col-md-6 ">
+                    <form action="/pay" method="get">
+                      <select class="form-control form-select " name="center" id="center" onchange="this.form.submit()">
+                        <option selected hidden>
+                          <% if (typeof testingCenter != "undefined" && testingCenter) { %>
+                          <p><%= testingCenter %></p>
+                          <% } else { %>
+                          <p>Tất cả cơ sở đăng ký</p>
+                          <% } %></option>
+                        <% center.map((item, index) => { %>
+                        <option value="<%= item.name %>"><%= item.name %></option>
+                        <% }) %>
+                      </select>
+                    </form>
+                  </div>
+                  <div class="col-md-5 ">
+                    <form action="/pay" method="get" class="myForm">
+                      <div class="input-group " style="width: 240px">
+                        <input id="daterange" name="daterange" type="text" placeholder="dd/mm/yyyy - dd/mm/yyyy"
+                          class="form-control" autocomplete="off"
+                          <% if (typeof daterange != "undefined" && daterange) { %> value="<%= daterange %>" <% } %> />
+                        <label class="input-group-btn input-icon" for="daterange">
+                          <span class="btn btn-default  ">
+                            <span class="glyphicon glyphicon-calendar">
+                              <img src="/assets/images/calendar.svg" />
+                            </span>
+                          </span>
+                        </label>
+                      </div>
+                      <button type="submit" class="d-none">Search</button>
+                    </form>
+                  </div>
+                  <div class="col-md-1 p-0 p-t-15 ">
+                    <div class="d-flex align-items-center h-100">
+                      <a href="/pay">
+                        <lord-icon src="https://cdn.lordicon.com/akuwjdzh.json" trigger="hover"
+                          style="width:25px;height:30px">
+                        </lord-icon>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="table-responsive">
+                <table id="config-table" class="table display table-bordered table-striped wrap">
+                  <thead>
+                    <tr>
+                      <th>STT</th>
+                      <th class="column-width">Biển kiểm soát</th>
+                      <th>Chủ phương tiện</th>
+                      <th>Số điện thoại</th>
+                      <th>Thời gian đăng kiểm</th>
+                      <th>Cơ sở đăng ký</th>
+                      <th>Đăng kiểm hộ</th>
+                      <th>Địa chỉ nhận xe</th>
+                      <th style="width: 115px;">Trạng thái</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% pay.items.map((item, index) => { %>
+                    <tr>
+                      <td><%= index + 1 %></td>
+                      <td class="text-uppercase"> <a
+                          href="/pay/content/<%= item.id %>"><%= pay.licensePlateConvert(item.license_plate) %></a>
+                      </td>
+                      <td><%= item.owner_name %></td>
+                      <td><%= item.owner_phone %></td>
+                      <td><%= pay.dateConvert(new Date(item.date)) %></td>
+                      <td><%= item.testing_name %></td>
+                      <td> <%if (item.address === null || item.address === "") { %>
+
+                        <% } else { %>
+                        <img src="/assets/images/checked.svg" />
+                        <% } %> </td>
+                      <td><%= item.address %></td>
+                      <td>
+                        <div class="d-flex justify-content-start align-items-center">
+
+                          <form action="/pay/qualified/<%= item.id %>" method="post">
+                            <input type="hidden" name="_method" value="patch">
+                            <button type="button" class="btn btn-obtain m-r-10" data-toggle="modal"
+                              data-target="#doupleModal<%= item.id %>" data-id="<%= item.id %>">
+                              Đạt
+                            </button>
+                            <% if (functions.update1 === 1) { %>
+                            <div class="modal fade" id="doupleModal<%= item.id %>" tabindex="-1" role="dialog"
+                              aria-labelledby="doupleModalCenterTitle" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="doupleModalLongTitle">Xác nhận</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    Xác nhận kết quả đăng kiểm ĐẠT cho xe
+                                    <mark class="text-uppercase">
+                                      <%= item.license_plate %>
+                                    </mark>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                    <button type="button" class="btn btn-success " data-dismiss="modal"
+                                      data-toggle="modal" data-target="#Modal<%= item.id %>">Xác nhận</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="modal fade" id="Modal<%= item.id %>" tabindex="-1" role="dialog"
+                              aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="ModalLongTitle">Xác nhận Đạt</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <div class="row">
+                                      <input type="hidden" name="_method" value="patch">
+                                      <div class="col-md-12 d-none">
+                                        <div class="form-group">
+                                          <input type="text" id="status" name="status"
+                                            class="form-control form-control-label" value="2">
+                                        </div>
+                                      </div>
+                                      <div class="col-md-12">
+                                        <div class="form-group">
+                                          <label for="plan_date" class="control-label">Có hiệu lực đến</label>
+                                          <input name="plan_date" id="plan_date" type="date" class="form-control"
+                                            value="">
+                                        </div>
+                                      </div>
+                                      <div class="col-md-12">
+                                        <div class="form-group">
+                                          <label for="date" class="control-label">Thời hạn đóng phí kỳ tiếp
+                                            theo</label>
+                                          <input name="payment_date" id="payment_date" type="date" class="form-control"
+                                            value="">
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                    <button type="submit" class="btn btn-success">Xác nhận</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <% } else { %>
+                            <div class="modal fade" id="doupleModal<%= item.id %>" tabindex="-1" role="dialog"
+                              aria-labelledby="doupleModalCenterTitle" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="doupleModalLongTitle">Thông báo</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <h4 class="text-danger text-center">
+                                      Không được phép truy cập !!!
+                                    </h4>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <% } %>
+                          </form>
+
+
+                          <form action="/pay/substandard/<%= item.id %>" method="post">
+                            <input type="hidden" name="_method" value="patch">
+                            <input type="text" id="status" name="status" class="form-control form-control-label d-none"
+                              value="1">
+                            <button type="button" class="btn btn-obtain" data-toggle="modal" style="color: #36383A;"
+                              data-target="#statusModal<%= item.id %>" data-id="<%= item.id %>">
+                              Không đạt
+                            </button>
+                            <% if (functions.update1 === 1) { %>
+                            <div class="modal fade" id="statusModal<%= item.id %>" tabindex="-1" role="dialog"
+                              aria-labelledby="statusModalCenterTitle" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="statusModalLongTitle">Xác nhận</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    Xác nhận kết quả đăng kiểm KHÔNG ĐẠT cho xe
+                                    <mark class="text-uppercase">
+                                      <%= item.license_plate %>
+                                    </mark>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                    <button type="submit" class="btn btn-success">Xác nhận</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <% } else { %>
+                            <div class="modal fade" id="statusModal<%= item.id %>" tabindex="-1" role="dialog"
+                              aria-labelledby="statusModalCenterTitle" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="statusModalLongTitle">Xác nhận</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <h4 class="text-danger text-center">
+                                      Không được phép truy cập !!!
+                                    </h4>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <% } %>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+<script src="https://cdn.lordicon.com/qjzruarw.js"></script>
